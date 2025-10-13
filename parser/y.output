@@ -1,0 +1,1044 @@
+
+state 0
+	$accept: .spl_prog $end 
+
+	GLOB  shift 2
+	.  error
+
+	spl_prog  goto 1
+
+state 1
+	$accept:  spl_prog.$end 
+
+	$end  accept
+	.  error
+
+
+state 2
+	spl_prog:  GLOB.'{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+
+	'{'  shift 3
+	.  error
+
+
+state 3
+	spl_prog:  GLOB '{'.variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+	variables: .    (2)
+
+	IDENT  shift 6
+	.  reduce 2 (src line 89)
+
+	variables  goto 4
+	var  goto 5
+
+state 4
+	spl_prog:  GLOB '{' variables.'}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+
+	'}'  shift 7
+	.  error
+
+
+state 5
+	variables:  var.variables 
+	variables: .    (2)
+
+	IDENT  shift 6
+	.  reduce 2 (src line 89)
+
+	variables  goto 8
+	var  goto 5
+
+state 6
+	var:  IDENT.    (4)
+
+	.  reduce 4 (src line 94)
+
+
+state 7
+	spl_prog:  GLOB '{' variables '}'.PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+
+	PROC_KW  shift 9
+	.  error
+
+
+state 8
+	variables:  var variables.    (3)
+
+	.  reduce 3 (src line 91)
+
+
+state 9
+	spl_prog:  GLOB '{' variables '}' PROC_KW.'{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+
+	'{'  shift 10
+	.  error
+
+
+state 10
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{'.procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+	procdefs: .    (5)
+
+	IDENT  shift 13
+	.  reduce 5 (src line 98)
+
+	procdefs  goto 11
+	pdef  goto 12
+
+state 11
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs.'}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+
+	'}'  shift 14
+	.  error
+
+
+state 12
+	procdefs:  pdef.procdefs 
+	procdefs: .    (5)
+
+	IDENT  shift 13
+	.  reduce 5 (src line 98)
+
+	procdefs  goto 15
+	pdef  goto 12
+
+state 13
+	pdef:  IDENT.'(' param ')' '{' body '}' 
+
+	'('  shift 16
+	.  error
+
+
+state 14
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}'.FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+
+	FUNC_KW  shift 17
+	.  error
+
+
+state 15
+	procdefs:  pdef procdefs.    (6)
+
+	.  reduce 6 (src line 100)
+
+
+ 16: reduce/reduce conflict  (red'ns 13 and 14) on ')'
+state 16
+	pdef:  IDENT '('.param ')' '{' body '}' 
+	param: .    (13)
+	maxthree: .    (14)
+
+	IDENT  shift 6
+	.  reduce 13 (src line 125)
+
+	var  goto 20
+	param  goto 18
+	maxthree  goto 19
+
+state 17
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW.'{' funcdefs '}' MAIN_KW '{' mainprog '}' 
+
+	'{'  shift 21
+	.  error
+
+
+state 18
+	pdef:  IDENT '(' param.')' '{' body '}' 
+
+	')'  shift 22
+	.  error
+
+
+state 19
+	param:  maxthree.    (12)
+
+	.  reduce 12 (src line 123)
+
+
+state 20
+	maxthree:  var.    (15)
+	maxthree:  var.var 
+	maxthree:  var.var var 
+
+	IDENT  shift 6
+	.  reduce 15 (src line 130)
+
+	var  goto 23
+
+state 21
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{'.funcdefs '}' MAIN_KW '{' mainprog '}' 
+	funcdefs: .    (8)
+
+	IDENT  shift 26
+	.  reduce 8 (src line 108)
+
+	funcdefs  goto 24
+	fdef  goto 25
+
+state 22
+	pdef:  IDENT '(' param ')'.'{' body '}' 
+
+	'{'  shift 27
+	.  error
+
+
+state 23
+	maxthree:  var var.    (16)
+	maxthree:  var var.var 
+
+	IDENT  shift 6
+	.  reduce 16 (src line 131)
+
+	var  goto 28
+
+state 24
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs.'}' MAIN_KW '{' mainprog '}' 
+
+	'}'  shift 29
+	.  error
+
+
+state 25
+	funcdefs:  fdef.funcdefs 
+	funcdefs: .    (8)
+
+	IDENT  shift 26
+	.  reduce 8 (src line 108)
+
+	funcdefs  goto 30
+	fdef  goto 25
+
+state 26
+	fdef:  IDENT.'(' param ')' '{' body ';' RETURN atom '}' 
+
+	'('  shift 31
+	.  error
+
+
+state 27
+	pdef:  IDENT '(' param ')' '{'.body '}' 
+
+	LOCAL  shift 33
+	.  error
+
+	body  goto 32
+
+state 28
+	maxthree:  var var var.    (17)
+
+	.  reduce 17 (src line 132)
+
+
+state 29
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}'.MAIN_KW '{' mainprog '}' 
+
+	MAIN_KW  shift 34
+	.  error
+
+
+state 30
+	funcdefs:  fdef funcdefs.    (9)
+
+	.  reduce 9 (src line 110)
+
+
+ 31: reduce/reduce conflict  (red'ns 13 and 14) on ')'
+state 31
+	fdef:  IDENT '('.param ')' '{' body ';' RETURN atom '}' 
+	param: .    (13)
+	maxthree: .    (14)
+
+	IDENT  shift 6
+	.  reduce 13 (src line 125)
+
+	var  goto 20
+	param  goto 35
+	maxthree  goto 19
+
+state 32
+	pdef:  IDENT '(' param ')' '{' body.'}' 
+
+	'}'  shift 36
+	.  error
+
+
+state 33
+	body:  LOCAL.'{' maxthree '}' algo 
+
+	'{'  shift 37
+	.  error
+
+
+state 34
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW.'{' mainprog '}' 
+
+	'{'  shift 38
+	.  error
+
+
+state 35
+	fdef:  IDENT '(' param.')' '{' body ';' RETURN atom '}' 
+
+	')'  shift 39
+	.  error
+
+
+state 36
+	pdef:  IDENT '(' param ')' '{' body '}'.    (7)
+
+	.  reduce 7 (src line 103)
+
+
+state 37
+	body:  LOCAL '{'.maxthree '}' algo 
+	maxthree: .    (14)
+
+	IDENT  shift 6
+	.  reduce 14 (src line 128)
+
+	var  goto 20
+	maxthree  goto 40
+
+state 38
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{'.mainprog '}' 
+
+	VAR_KW  shift 42
+	.  error
+
+	mainprog  goto 41
+
+state 39
+	fdef:  IDENT '(' param ')'.'{' body ';' RETURN atom '}' 
+
+	'{'  shift 43
+	.  error
+
+
+state 40
+	body:  LOCAL '{' maxthree.'}' algo 
+
+	'}'  shift 44
+	.  error
+
+
+state 41
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog.'}' 
+
+	'}'  shift 45
+	.  error
+
+
+state 42
+	mainprog:  VAR_KW.'{' variables '}' algo 
+
+	'{'  shift 46
+	.  error
+
+
+state 43
+	fdef:  IDENT '(' param ')' '{'.body ';' RETURN atom '}' 
+
+	LOCAL  shift 33
+	.  error
+
+	body  goto 47
+
+state 44
+	body:  LOCAL '{' maxthree '}'.algo 
+
+	HALT  shift 51
+	PRINT  shift 52
+	WHILE  shift 58
+	DO  shift 59
+	IF  shift 60
+	IDENT  shift 53
+	.  error
+
+	var  goto 57
+	algo  goto 48
+	instr_list  goto 49
+	instr  goto 50
+	assign  goto 54
+	loop  goto 55
+	branch  goto 56
+
+state 45
+	spl_prog:  GLOB '{' variables '}' PROC_KW '{' procdefs '}' FUNC_KW '{' funcdefs '}' MAIN_KW '{' mainprog '}'.    (1)
+
+	.  reduce 1 (src line 81)
+
+
+state 46
+	mainprog:  VAR_KW '{'.variables '}' algo 
+	variables: .    (2)
+
+	IDENT  shift 6
+	.  reduce 2 (src line 89)
+
+	variables  goto 61
+	var  goto 5
+
+state 47
+	fdef:  IDENT '(' param ')' '{' body.';' RETURN atom '}' 
+
+	';'  shift 62
+	.  error
+
+
+state 48
+	body:  LOCAL '{' maxthree '}' algo.    (11)
+
+	.  reduce 11 (src line 118)
+
+
+49: shift/reduce conflict (shift 63(0), red'n 21(0)) on ';'
+state 49
+	algo:  instr_list.    (21)
+	instr_list:  instr_list.';' instr 
+
+	';'  shift 63
+	.  reduce 21 (src line 144)
+
+
+state 50
+	instr_list:  instr.    (22)
+
+	.  reduce 22 (src line 146)
+
+
+state 51
+	instr:  HALT.    (24)
+
+	.  reduce 24 (src line 151)
+
+
+state 52
+	instr:  PRINT.output 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	STRING  shift 66
+	.  error
+
+	var  goto 67
+	atom  goto 65
+	output  goto 64
+
+state 53
+	var:  IDENT.    (4)
+	instr:  IDENT.'(' input ')' 
+
+	'('  shift 69
+	.  reduce 4 (src line 94)
+
+
+state 54
+	instr:  assign.    (27)
+
+	.  reduce 27 (src line 155)
+
+
+state 55
+	instr:  loop.    (28)
+
+	.  reduce 28 (src line 156)
+
+
+state 56
+	instr:  branch.    (29)
+
+	.  reduce 29 (src line 157)
+
+
+state 57
+	assign:  var.'=' IDENT '(' input ')' 
+	assign:  var.'=' term 
+
+	'='  shift 70
+	.  error
+
+
+state 58
+	loop:  WHILE.term '{' algo '}' 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	'('  shift 73
+	.  error
+
+	var  goto 67
+	atom  goto 72
+	term  goto 71
+
+state 59
+	loop:  DO.'{' algo '}' UNTIL term 
+
+	'{'  shift 74
+	.  error
+
+
+state 60
+	branch:  IF.term '{' algo '}' 
+	branch:  IF.term '{' algo '}' ELSE '{' algo '}' 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	'('  shift 73
+	.  error
+
+	var  goto 67
+	atom  goto 72
+	term  goto 75
+
+state 61
+	mainprog:  VAR_KW '{' variables.'}' algo 
+
+	'}'  shift 76
+	.  error
+
+
+state 62
+	fdef:  IDENT '(' param ')' '{' body ';'.RETURN atom '}' 
+
+	RETURN  shift 77
+	.  error
+
+
+state 63
+	instr_list:  instr_list ';'.instr 
+
+	HALT  shift 51
+	PRINT  shift 52
+	WHILE  shift 58
+	DO  shift 59
+	IF  shift 60
+	IDENT  shift 53
+	.  error
+
+	var  goto 57
+	instr  goto 78
+	assign  goto 54
+	loop  goto 55
+	branch  goto 56
+
+state 64
+	instr:  PRINT output.    (25)
+
+	.  reduce 25 (src line 153)
+
+
+state 65
+	output:  atom.    (36)
+
+	.  reduce 36 (src line 177)
+
+
+state 66
+	output:  STRING.    (37)
+
+	.  reduce 37 (src line 179)
+
+
+state 67
+	atom:  var.    (19)
+
+	.  reduce 19 (src line 139)
+
+
+state 68
+	atom:  NUMBER.    (20)
+
+	.  reduce 20 (src line 141)
+
+
+state 69
+	instr:  IDENT '('.input ')' 
+	input: .    (38)
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	.  reduce 38 (src line 182)
+
+	var  goto 67
+	atom  goto 80
+	input  goto 79
+
+state 70
+	assign:  var '='.IDENT '(' input ')' 
+	assign:  var '='.term 
+
+	IDENT  shift 81
+	NUMBER  shift 68
+	'('  shift 73
+	.  error
+
+	var  goto 67
+	atom  goto 72
+	term  goto 82
+
+state 71
+	loop:  WHILE term.'{' algo '}' 
+
+	'{'  shift 83
+	.  error
+
+
+state 72
+	term:  atom.    (42)
+
+	.  reduce 42 (src line 189)
+
+
+state 73
+	term:  '('.unop term ')' 
+	term:  '('.term binop term ')' 
+
+	NEG  shift 86
+	NOT  shift 87
+	IDENT  shift 6
+	NUMBER  shift 68
+	'('  shift 73
+	.  error
+
+	var  goto 67
+	atom  goto 72
+	term  goto 85
+	unop  goto 84
+
+state 74
+	loop:  DO '{'.algo '}' UNTIL term 
+
+	HALT  shift 51
+	PRINT  shift 52
+	WHILE  shift 58
+	DO  shift 59
+	IF  shift 60
+	IDENT  shift 53
+	.  error
+
+	var  goto 57
+	algo  goto 88
+	instr_list  goto 49
+	instr  goto 50
+	assign  goto 54
+	loop  goto 55
+	branch  goto 56
+
+state 75
+	branch:  IF term.'{' algo '}' 
+	branch:  IF term.'{' algo '}' ELSE '{' algo '}' 
+
+	'{'  shift 89
+	.  error
+
+
+state 76
+	mainprog:  VAR_KW '{' variables '}'.algo 
+
+	HALT  shift 51
+	PRINT  shift 52
+	WHILE  shift 58
+	DO  shift 59
+	IF  shift 60
+	IDENT  shift 53
+	.  error
+
+	var  goto 57
+	algo  goto 90
+	instr_list  goto 49
+	instr  goto 50
+	assign  goto 54
+	loop  goto 55
+	branch  goto 56
+
+state 77
+	fdef:  IDENT '(' param ')' '{' body ';' RETURN.atom '}' 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	.  error
+
+	var  goto 67
+	atom  goto 91
+
+state 78
+	instr_list:  instr_list ';' instr.    (23)
+
+	.  reduce 23 (src line 148)
+
+
+state 79
+	instr:  IDENT '(' input.')' 
+
+	')'  shift 92
+	.  error
+
+
+state 80
+	input:  atom.    (39)
+	input:  atom.atom 
+	input:  atom.atom atom 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	.  reduce 39 (src line 184)
+
+	var  goto 67
+	atom  goto 93
+
+state 81
+	var:  IDENT.    (4)
+	assign:  var '=' IDENT.'(' input ')' 
+
+	'('  shift 94
+	.  reduce 4 (src line 94)
+
+
+state 82
+	assign:  var '=' term.    (31)
+
+	.  reduce 31 (src line 164)
+
+
+state 83
+	loop:  WHILE term '{'.algo '}' 
+
+	HALT  shift 51
+	PRINT  shift 52
+	WHILE  shift 58
+	DO  shift 59
+	IF  shift 60
+	IDENT  shift 53
+	.  error
+
+	var  goto 57
+	algo  goto 95
+	instr_list  goto 49
+	instr  goto 50
+	assign  goto 54
+	loop  goto 55
+	branch  goto 56
+
+state 84
+	term:  '(' unop.term ')' 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	'('  shift 73
+	.  error
+
+	var  goto 67
+	atom  goto 72
+	term  goto 96
+
+state 85
+	term:  '(' term.binop term ')' 
+
+	EQ  shift 98
+	GREATER  shift 99
+	OR  shift 100
+	AND  shift 101
+	PLUS  shift 102
+	MINUS  shift 103
+	MULT  shift 104
+	DIV  shift 105
+	.  error
+
+	binop  goto 97
+
+state 86
+	unop:  NEG.    (45)
+
+	.  reduce 45 (src line 195)
+
+
+state 87
+	unop:  NOT.    (46)
+
+	.  reduce 46 (src line 197)
+
+
+state 88
+	loop:  DO '{' algo.'}' UNTIL term 
+
+	'}'  shift 106
+	.  error
+
+
+state 89
+	branch:  IF term '{'.algo '}' 
+	branch:  IF term '{'.algo '}' ELSE '{' algo '}' 
+
+	HALT  shift 51
+	PRINT  shift 52
+	WHILE  shift 58
+	DO  shift 59
+	IF  shift 60
+	IDENT  shift 53
+	.  error
+
+	var  goto 57
+	algo  goto 107
+	instr_list  goto 49
+	instr  goto 50
+	assign  goto 54
+	loop  goto 55
+	branch  goto 56
+
+state 90
+	mainprog:  VAR_KW '{' variables '}' algo.    (18)
+
+	.  reduce 18 (src line 135)
+
+
+state 91
+	fdef:  IDENT '(' param ')' '{' body ';' RETURN atom.'}' 
+
+	'}'  shift 108
+	.  error
+
+
+state 92
+	instr:  IDENT '(' input ')'.    (26)
+
+	.  reduce 26 (src line 154)
+
+
+state 93
+	input:  atom atom.    (40)
+	input:  atom atom.atom 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	.  reduce 40 (src line 185)
+
+	var  goto 67
+	atom  goto 109
+
+state 94
+	assign:  var '=' IDENT '('.input ')' 
+	input: .    (38)
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	.  reduce 38 (src line 182)
+
+	var  goto 67
+	atom  goto 80
+	input  goto 110
+
+state 95
+	loop:  WHILE term '{' algo.'}' 
+
+	'}'  shift 111
+	.  error
+
+
+state 96
+	term:  '(' unop term.')' 
+
+	')'  shift 112
+	.  error
+
+
+state 97
+	term:  '(' term binop.term ')' 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	'('  shift 73
+	.  error
+
+	var  goto 67
+	atom  goto 72
+	term  goto 113
+
+state 98
+	binop:  EQ.    (47)
+
+	.  reduce 47 (src line 200)
+
+
+state 99
+	binop:  GREATER.    (48)
+
+	.  reduce 48 (src line 202)
+
+
+state 100
+	binop:  OR.    (49)
+
+	.  reduce 49 (src line 203)
+
+
+state 101
+	binop:  AND.    (50)
+
+	.  reduce 50 (src line 204)
+
+
+state 102
+	binop:  PLUS.    (51)
+
+	.  reduce 51 (src line 205)
+
+
+state 103
+	binop:  MINUS.    (52)
+
+	.  reduce 52 (src line 206)
+
+
+state 104
+	binop:  MULT.    (53)
+
+	.  reduce 53 (src line 207)
+
+
+state 105
+	binop:  DIV.    (54)
+
+	.  reduce 54 (src line 208)
+
+
+state 106
+	loop:  DO '{' algo '}'.UNTIL term 
+
+	UNTIL  shift 114
+	.  error
+
+
+state 107
+	branch:  IF term '{' algo.'}' 
+	branch:  IF term '{' algo.'}' ELSE '{' algo '}' 
+
+	'}'  shift 115
+	.  error
+
+
+state 108
+	fdef:  IDENT '(' param ')' '{' body ';' RETURN atom '}'.    (10)
+
+	.  reduce 10 (src line 113)
+
+
+state 109
+	input:  atom atom atom.    (41)
+
+	.  reduce 41 (src line 186)
+
+
+state 110
+	assign:  var '=' IDENT '(' input.')' 
+
+	')'  shift 116
+	.  error
+
+
+state 111
+	loop:  WHILE term '{' algo '}'.    (32)
+
+	.  reduce 32 (src line 167)
+
+
+state 112
+	term:  '(' unop term ')'.    (43)
+
+	.  reduce 43 (src line 191)
+
+
+state 113
+	term:  '(' term binop term.')' 
+
+	')'  shift 117
+	.  error
+
+
+state 114
+	loop:  DO '{' algo '}' UNTIL.term 
+
+	IDENT  shift 6
+	NUMBER  shift 68
+	'('  shift 73
+	.  error
+
+	var  goto 67
+	atom  goto 72
+	term  goto 118
+
+state 115
+	branch:  IF term '{' algo '}'.    (34)
+	branch:  IF term '{' algo '}'.ELSE '{' algo '}' 
+
+	ELSE  shift 119
+	.  reduce 34 (src line 172)
+
+
+state 116
+	assign:  var '=' IDENT '(' input ')'.    (30)
+
+	.  reduce 30 (src line 160)
+
+
+state 117
+	term:  '(' term binop term ')'.    (44)
+
+	.  reduce 44 (src line 192)
+
+
+state 118
+	loop:  DO '{' algo '}' UNTIL term.    (33)
+
+	.  reduce 33 (src line 169)
+
+
+state 119
+	branch:  IF term '{' algo '}' ELSE.'{' algo '}' 
+
+	'{'  shift 120
+	.  error
+
+
+state 120
+	branch:  IF term '{' algo '}' ELSE '{'.algo '}' 
+
+	HALT  shift 51
+	PRINT  shift 52
+	WHILE  shift 58
+	DO  shift 59
+	IF  shift 60
+	IDENT  shift 53
+	.  error
+
+	var  goto 57
+	algo  goto 121
+	instr_list  goto 49
+	instr  goto 50
+	assign  goto 54
+	loop  goto 55
+	branch  goto 56
+
+state 121
+	branch:  IF term '{' algo '}' ELSE '{' algo.'}' 
+
+	'}'  shift 122
+	.  error
+
+
+state 122
+	branch:  IF term '{' algo '}' ELSE '{' algo '}'.    (35)
+
+	.  reduce 35 (src line 174)
+
+
+36 terminals, 24 nonterminals
+55 grammar rules, 123/16000 states
+1 shift/reduce, 2 reduce/reduce conflicts reported
+73 working sets used
+memory: parser 132/240000
+21 extra closures
+145 shift entries, 1 exceptions
+64 goto entries
+49 entries saved by goto default
+Optimizer space used: output 143/240000
+143 table entries, 0 zero
+maximum spread: 36, maximum offset: 120

@@ -2,31 +2,121 @@ package main
 
 import (
 	"SPL-compiler/lexer"
+	"SPL-compiler/parser"
 	"fmt"
 	"os"
 	"strings"
 )
 
 func main() {
-	fmt.Println("SPL (Students' Programming Language) Lexer")
-	fmt.Println("==========================================")
+	// fmt.Println("SPL (Students' Programming Language) Lexer")
+	// fmt.Println("==========================================")
 
-	// Run examples
-	if len(os.Args) == 1 {
-		runExamples()
+	// // Run examples
+	// if len(os.Args) == 1 {
+	// 	runExamples()
+	// 	return
+	// }
+
+	// //  Read from file
+	// if os.Args[1] == "-f" || os.Args[1] == "--file" {
+	// 	if len(os.Args) < 3 {
+	// 		fmt.Println("Usage: go run main.go -f <filename>")
+	// 		return
+	// 	}
+	// 	runFromFile(os.Args[2])
+	// 	return
+	// }
+
+	// get token stream and check for errors
+	// input := `glob { x y }
+	// 		proc {
+	// 			printsum(a b) {
+	// 				local { sum }
+	// 				sum = (a plus b);
+	// 				print sum;
+	// 			}
+	// 		}
+	// 		main {
+	// 			var { result }
+	// 			x = 5;
+	// 			y = 3;
+	// 			printsum(x y);
+	// 			halt
+	// 		}`
+
+	runParserTests()
+}
+
+func PrettyPrintASTNode(n *parser.ASTNode, prefix string, isTail bool) {
+	if n == nil {
 		return
 	}
 
-	//  Read from file
-	if os.Args[1] == "-f" || os.Args[1] == "--file" {
-		if len(os.Args) < 3 {
-			fmt.Println("Usage: go run main.go -f <filename>")
-			return
+	connector := "├── "
+	if isTail {
+		connector = "└── "
+	}
+	fmt.Printf("%s%s[%d] %s", prefix, connector, n.ID, n.Type)
+	if n.Name != "" {
+		fmt.Printf(": %s", n.Name)
+	}
+	fmt.Println()
+
+	childPrefix := prefix
+	if isTail {
+		childPrefix += "    "
+	} else {
+		childPrefix += "│   "
+	}
+
+	for i, child := range n.Children {
+		isLast := i == len(n.Children)-1
+		PrettyPrintASTNode(child, childPrefix, isLast)
+	}
+}
+
+func runParserTests() {
+	input := `glob { } 
+proc { }
+func { }
+main { 
+	var {oompie}
+	print poep;
+	while (oompie > 0) {
+		print oompies;
+		oompie = (oompie minus 1)
+	};
+	halt
+}`
+	fmt.Println("Parsing input:\n---\n" + input + "\n---")
+
+	l := lexer.New(input)
+	lexerAdapter := &parser.LexerAdapter{L: l}
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Fprintf(os.Stderr, "Compilation failed: %v\n", r)
+			os.Exit(1)
 		}
-		runFromFile(os.Args[2])
-		return
+	}()
+
+	fmt.Println("Parsing started...")
+	result := parser.YyParse(lexerAdapter)
+	if result != 0 {
+		fmt.Fprintf(os.Stderr, "Parsing failed with a syntax error.\n")
+		os.Exit(1)
 	}
 
+	if parser.ResultAST != nil {
+		fmt.Println("\n--- Abstract Syntax Tree ---")
+		parser.PrintAST(parser.ResultAST, 0)
+		fmt.Println("\nParsing completed successfully! ✅")
+	} else {
+		fmt.Fprintf(os.Stderr, "Parsing finished, but no AST was generated.\n")
+	}
+	fmt.Println("\nPretty Printed AST:")
+	PrettyPrintASTNode(parser.ResultAST, "", true)
 }
 
 func runExamples() {

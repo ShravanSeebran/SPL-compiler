@@ -17,18 +17,17 @@ const (
 	STRING = "STRING" // string: "..." max length 15
 
 	// assignment Operators
-	ASSIGN   = "="
-	
+	ASSIGN = "="
 
 	// SPL Binary Operators
-	EQ   = "eq"    // equality
-	GT   = ">"     // greater than
-	OR   = "or"    // logical or
-	AND  = "and"   // logical and
-	PLUS = "plus"     // addition
-	MINUS = "minus"    // subtraction
-	MULT = "mult"  // multiplication
-	DIV  = "div"   // division
+	EQ    = "eq"    // equality
+	GT    = ">"     // greater than
+	OR    = "or"    // logical or
+	AND   = "and"   // logical and
+	PLUS  = "plus"  // addition
+	MINUS = "minus" // subtraction
+	MULT  = "mult"  // multiplication
+	DIV   = "div"   // division
 
 	// SPL Unary Operators
 	NEG = "neg" // negation
@@ -51,13 +50,13 @@ const (
 	RETURN = "return" // return statement
 
 	// SPL Keywords - Control Flow
-	HALT   = "halt"  // halt instruction
-	PRINT  = "print" // print statement
-	WHILE  = "while" // while loop
-	DO     = "do"    // do-until loop
-	UNTIL  = "until" // until condition
-	IF     = "if"    // if statement
-	ELSE   = "else"  // else clause
+	HALT  = "halt"  // halt instruction
+	PRINT = "print" // print statement
+	WHILE = "while" // while loop
+	DO    = "do"    // do-until loop
+	UNTIL = "until" // until condition
+	IF    = "if"    // if statement
+	ELSE  = "else"  // else clause
 )
 
 // Keywords map for identifying SPL keywords
