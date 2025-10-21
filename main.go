@@ -1,50 +1,15 @@
 package main
 
 import (
-	"SPL-compiler/lexer"
-	"SPL-compiler/parser"
 	"fmt"
 	"os"
 	"strings"
+
+	"SPL-compiler/lexer"
+	"SPL-compiler/parser"
 )
 
 func main() {
-	// fmt.Println("SPL (Students' Programming Language) Lexer")
-	// fmt.Println("==========================================")
-
-	// // Run examples
-	// if len(os.Args) == 1 {
-	// 	runExamples()
-	// 	return
-	// }
-
-	// //  Read from file
-	// if os.Args[1] == "-f" || os.Args[1] == "--file" {
-	// 	if len(os.Args) < 3 {
-	// 		fmt.Println("Usage: go run main.go -f <filename>")
-	// 		return
-	// 	}
-	// 	runFromFile(os.Args[2])
-	// 	return
-	// }
-
-	// get token stream and check for errors
-	// input := `glob { x y }
-	// 		proc {
-	// 			printsum(a b) {
-	// 				local { sum }
-	// 				sum = (a plus b);
-	// 				print sum;
-	// 			}
-	// 		}
-	// 		main {
-	// 			var { result }
-	// 			x = 5;
-	// 			y = 3;
-	// 			printsum(x y);
-	// 			halt
-	// 		}`
-
 	runParserTests()
 }
 
@@ -85,17 +50,11 @@ func runParserTests() {
 		print poep;
 		while (oompie > 0) {
 			print oompies;
-			oompie = (oompie minus 1)
+			oompie = (oompie minus 1);
+			oompie = sit(tannie oupa)
 		};
 		halt
 	}`
-	// input := `glob { }
-	// 	proc {}
-	// 	func { }
-	// 	main {
-	// 		var { result }
-	// 		print poep
-	// 	}`
 	fmt.Println("Parsing input:\n---\n" + input + "\n---")
 
 	l := lexer.New(input)
@@ -109,21 +68,21 @@ func runParserTests() {
 	}()
 
 	fmt.Println("Parsing started...")
-	result := parser.YyParse(lexerAdapter)
-	if result != 0 {
-		fmt.Fprintf(os.Stderr, "Parsing failed with a syntax error.\n")
+	result, err := parser.Parse(lexerAdapter)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Parsing error: %v\n", err)
 		os.Exit(1)
 	}
 
-	if parser.ResultAST != nil {
+	if result != nil {
 		fmt.Println("\n--- Abstract Syntax Tree ---")
-		parser.PrintAST(parser.ResultAST, 0)
+		parser.PrintAST(result, 0)
 		fmt.Println("\nParsing completed successfully! ✅")
 	} else {
 		fmt.Fprintf(os.Stderr, "Parsing finished, but no AST was generated.\n")
 	}
 	fmt.Println("\nPretty Printed AST:")
-	PrettyPrintASTNode(parser.ResultAST, "", true)
+	PrettyPrintASTNode(result, "", true)
 }
 
 func runExamples() {
@@ -257,9 +216,11 @@ func colorizeTokenType(tokenType string) string {
 }
 
 func isKeyword(tokenType string) bool {
-	keywords := []string{"glob", "proc", "func", "main", "var", "local", "return",
+	keywords := []string{
+		"glob", "proc", "func", "main", "var", "local", "return",
 		"halt", "print", "while", "do", "until", "if", "else", "eq", "or", "and",
-		"plus", "minus", "mult", "div", "neg", "not"}
+		"plus", "minus", "mult", "div", "neg", "not",
+	}
 
 	for _, keyword := range keywords {
 		if tokenType == keyword {

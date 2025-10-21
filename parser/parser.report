@@ -26,7 +26,7 @@ state 3
 	variables: .    (2)
 
 	IDENT  shift 6
-	.  reduce 2 (src line 86)
+	.  reduce 2 (src line 84)
 
 	variables  goto 4
 	var  goto 5
@@ -43,7 +43,7 @@ state 5
 	variables: .    (2)
 
 	IDENT  shift 6
-	.  reduce 2 (src line 86)
+	.  reduce 2 (src line 84)
 
 	variables  goto 8
 	var  goto 5
@@ -51,7 +51,7 @@ state 5
 state 6
 	var:  IDENT.    (4)
 
-	.  reduce 4 (src line 91)
+	.  reduce 4 (src line 89)
 
 
 state 7
@@ -64,7 +64,7 @@ state 7
 state 8
 	variables:  var variables.    (3)
 
-	.  reduce 3 (src line 88)
+	.  reduce 3 (src line 86)
 
 
 state 9
@@ -79,7 +79,7 @@ state 10
 	procdefs: .    (6)
 
 	IDENT  shift 14
-	.  reduce 6 (src line 95)
+	.  reduce 6 (src line 93)
 
 	name  goto 13
 	procdefs  goto 11
@@ -97,7 +97,7 @@ state 12
 	procdefs: .    (6)
 
 	IDENT  shift 14
-	.  reduce 6 (src line 95)
+	.  reduce 6 (src line 93)
 
 	name  goto 13
 	procdefs  goto 16
@@ -113,7 +113,7 @@ state 13
 state 14
 	name:  IDENT.    (5)
 
-	.  reduce 5 (src line 93)
+	.  reduce 5 (src line 91)
 
 
 state 15
@@ -126,7 +126,7 @@ state 15
 state 16
 	procdefs:  pdef procdefs.    (7)
 
-	.  reduce 7 (src line 97)
+	.  reduce 7 (src line 95)
 
 
 state 17
@@ -134,7 +134,7 @@ state 17
 	maxthree: .    (14)
 
 	IDENT  shift 6
-	.  reduce 14 (src line 122)
+	.  reduce 14 (src line 120)
 
 	var  goto 21
 	param  goto 19
@@ -157,7 +157,7 @@ state 19
 state 20
 	param:  maxthree.    (13)
 
-	.  reduce 13 (src line 120)
+	.  reduce 13 (src line 118)
 
 
 state 21
@@ -166,7 +166,7 @@ state 21
 	maxthree:  var.var var 
 
 	IDENT  shift 6
-	.  reduce 15 (src line 124)
+	.  reduce 15 (src line 122)
 
 	var  goto 24
 
@@ -175,7 +175,7 @@ state 22
 	funcdefs: .    (9)
 
 	IDENT  shift 14
-	.  reduce 9 (src line 105)
+	.  reduce 9 (src line 103)
 
 	name  goto 27
 	funcdefs  goto 25
@@ -193,7 +193,7 @@ state 24
 	maxthree:  var var.var 
 
 	IDENT  shift 6
-	.  reduce 16 (src line 125)
+	.  reduce 16 (src line 123)
 
 	var  goto 29
 
@@ -209,7 +209,7 @@ state 26
 	funcdefs: .    (9)
 
 	IDENT  shift 14
-	.  reduce 9 (src line 105)
+	.  reduce 9 (src line 103)
 
 	name  goto 27
 	funcdefs  goto 31
@@ -233,7 +233,7 @@ state 28
 state 29
 	maxthree:  var var var.    (17)
 
-	.  reduce 17 (src line 126)
+	.  reduce 17 (src line 124)
 
 
 state 30
@@ -246,7 +246,7 @@ state 30
 state 31
 	funcdefs:  fdef funcdefs.    (10)
 
-	.  reduce 10 (src line 107)
+	.  reduce 10 (src line 105)
 
 
 state 32
@@ -254,7 +254,7 @@ state 32
 	maxthree: .    (14)
 
 	IDENT  shift 6
-	.  reduce 14 (src line 122)
+	.  reduce 14 (src line 120)
 
 	var  goto 21
 	param  goto 36
@@ -291,7 +291,7 @@ state 36
 state 37
 	pdef:  name LPAREN param RPAREN LBRACE body RBRACE.    (8)
 
-	.  reduce 8 (src line 100)
+	.  reduce 8 (src line 98)
 
 
 state 38
@@ -299,7 +299,7 @@ state 38
 	maxthree: .    (14)
 
 	IDENT  shift 6
-	.  reduce 14 (src line 122)
+	.  reduce 14 (src line 120)
 
 	var  goto 21
 	maxthree  goto 41
@@ -370,7 +370,7 @@ state 45
 state 46
 	spl_prog:  GLOB LBRACE variables RBRACE PROC LBRACE procdefs RBRACE FUNC LBRACE funcdefs RBRACE MAIN LBRACE mainprog RBRACE.    (1)
 
-	.  reduce 1 (src line 74)
+	.  reduce 1 (src line 73)
 
 
 state 47
@@ -378,7 +378,7 @@ state 47
 	variables: .    (2)
 
 	IDENT  shift 6
-	.  reduce 2 (src line 86)
+	.  reduce 2 (src line 84)
 
 	variables  goto 62
 	var  goto 5
@@ -393,7 +393,7 @@ state 48
 state 49
 	body:  LOCAL LBRACE maxthree RBRACE algo.    (12)
 
-	.  reduce 12 (src line 115)
+	.  reduce 12 (src line 113)
 
 
 50: shift/reduce conflict (shift 64(0), red'n 21(0)) on SEMICOLON
@@ -402,13 +402,13 @@ state 50
 	algo:  instr.SEMICOLON algo 
 
 	SEMICOLON  shift 64
-	.  reduce 21 (src line 139)
+	.  reduce 21 (src line 137)
 
 
 state 51
 	instr:  HALT.    (23)
 
-	.  reduce 23 (src line 144)
+	.  reduce 23 (src line 142)
 
 
 state 52
@@ -433,27 +433,27 @@ state 53
 state 54
 	instr:  assign.    (26)
 
-	.  reduce 26 (src line 148)
+	.  reduce 26 (src line 146)
 
 
 state 55
 	instr:  loop.    (27)
 
-	.  reduce 27 (src line 149)
+	.  reduce 27 (src line 147)
 
 
 state 56
 	instr:  branch.    (28)
 
-	.  reduce 28 (src line 150)
+	.  reduce 28 (src line 148)
 
 
 state 57
 	var:  IDENT.    (4)
 	name:  IDENT.    (5)
 
-	LPAREN  reduce 5 (src line 93)
-	.  reduce 4 (src line 91)
+	LPAREN  reduce 5 (src line 91)
+	.  reduce 4 (src line 89)
 
 
 state 58
@@ -532,31 +532,31 @@ state 64
 state 65
 	instr:  PRINT output.    (24)
 
-	.  reduce 24 (src line 146)
+	.  reduce 24 (src line 144)
 
 
 state 66
 	output:  atom.    (35)
 
-	.  reduce 35 (src line 168)
+	.  reduce 35 (src line 166)
 
 
 state 67
 	output:  STRING.    (36)
 
-	.  reduce 36 (src line 170)
+	.  reduce 36 (src line 168)
 
 
 state 68
 	atom:  var.    (19)
 
-	.  reduce 19 (src line 134)
+	.  reduce 19 (src line 132)
 
 
 state 69
 	atom:  NUMBER.    (20)
 
-	.  reduce 20 (src line 136)
+	.  reduce 20 (src line 134)
 
 
 state 70
@@ -565,7 +565,7 @@ state 70
 
 	IDENT  shift 6
 	NUMBER  shift 69
-	.  reduce 37 (src line 173)
+	.  reduce 37 (src line 171)
 
 	var  goto 68
 	atom  goto 81
@@ -595,7 +595,7 @@ state 72
 state 73
 	term:  atom.    (41)
 
-	.  reduce 41 (src line 180)
+	.  reduce 41 (src line 178)
 
 
 state 74
@@ -673,7 +673,7 @@ state 78
 state 79
 	algo:  instr SEMICOLON algo.    (22)
 
-	.  reduce 22 (src line 141)
+	.  reduce 22 (src line 139)
 
 
 state 80
@@ -690,7 +690,7 @@ state 81
 
 	IDENT  shift 6
 	NUMBER  shift 69
-	.  reduce 38 (src line 175)
+	.  reduce 38 (src line 173)
 
 	var  goto 68
 	atom  goto 94
@@ -705,7 +705,7 @@ state 82
 state 83
 	assign:  var ASSIGN term.    (30)
 
-	.  reduce 30 (src line 155)
+	.  reduce 30 (src line 153)
 
 
 state 84
@@ -757,13 +757,13 @@ state 86
 state 87
 	unop:  NEG.    (44)
 
-	.  reduce 44 (src line 186)
+	.  reduce 44 (src line 184)
 
 
 state 88
 	unop:  NOT.    (45)
 
-	.  reduce 45 (src line 188)
+	.  reduce 45 (src line 186)
 
 
 state 89
@@ -796,7 +796,7 @@ state 90
 state 91
 	mainprog:  VAR LBRACE variables RBRACE algo.    (18)
 
-	.  reduce 18 (src line 129)
+	.  reduce 18 (src line 127)
 
 
 state 92
@@ -809,7 +809,7 @@ state 92
 state 93
 	instr:  name LPAREN input RPAREN.    (25)
 
-	.  reduce 25 (src line 147)
+	.  reduce 25 (src line 145)
 
 
 state 94
@@ -818,7 +818,7 @@ state 94
 
 	IDENT  shift 6
 	NUMBER  shift 69
-	.  reduce 39 (src line 176)
+	.  reduce 39 (src line 174)
 
 	var  goto 68
 	atom  goto 110
@@ -829,7 +829,7 @@ state 95
 
 	IDENT  shift 6
 	NUMBER  shift 69
-	.  reduce 37 (src line 173)
+	.  reduce 37 (src line 171)
 
 	var  goto 68
 	atom  goto 81
@@ -864,49 +864,49 @@ state 98
 state 99
 	binop:  EQ.    (46)
 
-	.  reduce 46 (src line 191)
+	.  reduce 46 (src line 189)
 
 
 state 100
 	binop:  GT.    (47)
 
-	.  reduce 47 (src line 193)
+	.  reduce 47 (src line 191)
 
 
 state 101
 	binop:  OR.    (48)
 
-	.  reduce 48 (src line 194)
+	.  reduce 48 (src line 192)
 
 
 state 102
 	binop:  AND.    (49)
 
-	.  reduce 49 (src line 195)
+	.  reduce 49 (src line 193)
 
 
 state 103
 	binop:  PLUS.    (50)
 
-	.  reduce 50 (src line 196)
+	.  reduce 50 (src line 194)
 
 
 state 104
 	binop:  MINUS.    (51)
 
-	.  reduce 51 (src line 197)
+	.  reduce 51 (src line 195)
 
 
 state 105
 	binop:  MULT.    (52)
 
-	.  reduce 52 (src line 198)
+	.  reduce 52 (src line 196)
 
 
 state 106
 	binop:  DIV.    (53)
 
-	.  reduce 53 (src line 199)
+	.  reduce 53 (src line 197)
 
 
 state 107
@@ -927,13 +927,13 @@ state 108
 state 109
 	fdef:  name LPAREN param RPAREN LBRACE body SEMICOLON RETURN atom RBRACE.    (11)
 
-	.  reduce 11 (src line 110)
+	.  reduce 11 (src line 108)
 
 
 state 110
 	input:  atom atom atom.    (40)
 
-	.  reduce 40 (src line 177)
+	.  reduce 40 (src line 175)
 
 
 state 111
@@ -946,13 +946,13 @@ state 111
 state 112
 	loop:  WHILE term LBRACE algo RBRACE.    (31)
 
-	.  reduce 31 (src line 158)
+	.  reduce 31 (src line 156)
 
 
 state 113
 	term:  LPAREN unop term RPAREN.    (42)
 
-	.  reduce 42 (src line 182)
+	.  reduce 42 (src line 180)
 
 
 state 114
@@ -979,25 +979,25 @@ state 116
 	branch:  IF term LBRACE algo RBRACE.ELSE LBRACE algo RBRACE 
 
 	ELSE  shift 120
-	.  reduce 33 (src line 163)
+	.  reduce 33 (src line 161)
 
 
 state 117
 	assign:  var ASSIGN name LPAREN input RPAREN.    (29)
 
-	.  reduce 29 (src line 153)
+	.  reduce 29 (src line 151)
 
 
 state 118
 	term:  LPAREN term binop term RPAREN.    (43)
 
-	.  reduce 43 (src line 183)
+	.  reduce 43 (src line 181)
 
 
 state 119
 	loop:  DO LBRACE algo RBRACE UNTIL term.    (32)
 
-	.  reduce 32 (src line 160)
+	.  reduce 32 (src line 158)
 
 
 state 120
@@ -1036,7 +1036,7 @@ state 122
 state 123
 	branch:  IF term LBRACE algo RBRACE ELSE LBRACE algo RBRACE.    (34)
 
-	.  reduce 34 (src line 165)
+	.  reduce 34 (src line 163)
 
 
 36 terminals, 24 nonterminals

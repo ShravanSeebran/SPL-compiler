@@ -1,16 +1,18 @@
 package parser
 
 import (
+	"fmt"
+
 	"SPL-compiler/lexer"
 	"SPL-compiler/token"
-	"fmt"
 )
 
 type LexerAdapter struct {
-	L *lexer.Lexer
+	L   *lexer.Lexer
+	AST *ASTNode
 }
 
-func (la *LexerAdapter) Lex(lval *YySymType) int {
+func (la *LexerAdapter) Lex(lval *yySymType) int {
 	tok := la.L.NextToken()
 	if tok.Type == token.ILLEGAL {
 		panic("Lexical error at line " + fmt.Sprint(tok.Line) +
@@ -22,15 +24,15 @@ func (la *LexerAdapter) Lex(lval *YySymType) int {
 	case token.GLOB:
 		return GLOB
 	case token.PROC:
-		return PROC_KW
+		return PROC
 	case token.FUNC:
-		return FUNC_KW
+		return FUNC
 	case token.MAIN:
-		return MAIN_KW
+		return MAIN
 	case token.LOCAL:
 		return LOCAL
 	case token.VAR:
-		return VAR_KW
+		return VAR
 	case token.RETURN:
 		return RETURN
 	case token.HALT:
@@ -47,47 +49,58 @@ func (la *LexerAdapter) Lex(lval *YySymType) int {
 		return IF
 	case token.ELSE:
 		return ELSE
+	case token.SEMICOLON:
+		return SEMICOLON
+	case token.LPAREN:
+		return LPAREN
+	case token.RPAREN:
+		return RPAREN
+	case token.LBRACE:
+		return LBRACE
+	case token.RBRACE:
+		return RBRACE
+	case token.ASSIGN:
+		return ASSIGN
+
 	case token.NEG:
+		lval.Str = tok.Literal
 		return NEG
 	case token.NOT:
+		lval.Str = tok.Literal
 		return NOT
 	case token.EQ:
+		lval.Str = tok.Literal
 		return EQ
 	case token.GT:
-		return GREATER
+		lval.Str = tok.Literal
+		return GT
 	case token.OR:
+		lval.Str = tok.Literal
 		return OR
 	case token.AND:
+		lval.Str = tok.Literal
 		return AND
 	case token.PLUS:
+		lval.Str = tok.Literal
 		return PLUS
 	case token.MINUS:
+		lval.Str = tok.Literal
 		return MINUS
 	case token.MULT:
+		lval.Str = tok.Literal
 		return MULT
 	case token.DIV:
+		lval.Str = tok.Literal
 		return DIV
+	case token.IDENT:
+		lval.Str = tok.Literal
+		return IDENT
 	case token.INT:
 		lval.Str = tok.Literal
 		return NUMBER
 	case token.STRING:
 		lval.Str = tok.Literal
 		return STRING
-	case token.IDENT:
-		lval.Str = tok.Literal
-		return IDENT
-	case token.ASSIGN:
-		return '='
-	case token.SEMICOLON:
-		return ';'
-	case token.LPAREN:
-		return '('
-	case token.RPAREN:
-		return ')'
-	case token.LBRACE:
-		return '{'
-	case token.RBRACE:
-		return '}'
 	case token.EOF:
 		return 0
 	}
