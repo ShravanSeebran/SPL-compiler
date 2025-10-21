@@ -77,18 +77,25 @@ func PrettyPrintASTNode(n *parser.ASTNode, prefix string, isTail bool) {
 }
 
 func runParserTests() {
-	input := `glob { } 
-proc { }
-func { }
-main { 
-	var {oompie}
-	print poep;
-	while (oompie > 0) {
-		print oompies;
-		oompie = (oompie minus 1)
-	};
-	halt
-}`
+	input := `glob { }
+	proc { }
+	func { }
+	main {
+		var {oompie}
+		print poep;
+		while (oompie > 0) {
+			print oompies;
+			oompie = (oompie minus 1)
+		};
+		halt
+	}`
+	// input := `glob { }
+	// 	proc {}
+	// 	func { }
+	// 	main {
+	// 		var { result }
+	// 		print poep
+	// 	}`
 	fmt.Println("Parsing input:\n---\n" + input + "\n---")
 
 	l := lexer.New(input)
