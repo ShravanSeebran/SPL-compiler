@@ -77,7 +77,7 @@ spl_prog
       FUNC LBRACE funcdefs  RBRACE
       MAIN LBRACE mainprog  RBRACE
       {
-        $$ = NewNode("SPL_PROGRAM", "", $3, $7, $11, $15)
+        $$ = NewNode("SPL_PROG", "", $3, $7, $11, $15)
         ResultAST = $$
         yylex.(*LexerAdapter).AST = ResultAST
       }

@@ -609,7 +609,7 @@ yydefault:
 		yyDollar = yyS[yypt-16 : yypt+1]
 //line spl.y:79
 		{
-			yyVAL.node = NewNode("SPL_PROGRAM", "", yyDollar[3].node, yyDollar[7].node, yyDollar[11].node, yyDollar[15].node)
+			yyVAL.node = NewNode("SPL_PROG", "", yyDollar[3].node, yyDollar[7].node, yyDollar[11].node, yyDollar[15].node)
 			ResultAST = yyVAL.node
 			yylex.(*LexerAdapter).AST = ResultAST
 		}
