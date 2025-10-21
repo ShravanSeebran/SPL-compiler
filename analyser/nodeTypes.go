@@ -1,0 +1,26 @@
+package analyser
+
+const (
+	SPL_PROG  string = "SPL_Program"
+	VARIABLES string = "VARIABLES"
+	VAR       string = "VAR"
+	NAME      string = "NAME"
+	PROCDEFS  string = "PROCDEFS"
+	PDEF      string = "PDEF"
+	FUNCDEFS  string = "FUNCDEFS"
+	FDEF      string = "FDEF"
+	BODY      string = "BODY"
+	PARAM     string = "PARAM"
+	MAXTHREE  string = "MAXTHREE"
+	MAINPROG  string = "MAINPROG"
+	ATOM      string = "ATOM"
+	ALGO      string = "ALGO"
+	INSTR     string = "INSTR"
+	ASSIGN    string = "ASSIGN"
+	LOOP      string = "LOOP"
+	BRANCH    string = "BRANCH"
+	OUTPUT    string = "OUTPUT"
+	INPUT     string = "INPUT"
+	UNOP      string = "UNOP"
+	BINOP     string = "BINOP"
+)
