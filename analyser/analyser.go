@@ -92,13 +92,21 @@ func handleProgram(node *parser.ASTNode) {
 		visitNode(child)
 		currentScope = auxStack.exit()
 	}
+	// NOTE: Alternative fix for handleVar checking GLOBAL_SCOPE
+	// uncomment the following line and comment the above one
+	// currentScope = auxStack.exit()
 
 	currentScope = auxStack.exit() // should be -1
 }
 
 func handleVariables(node *parser.ASTNode) {
-	declareVar(node.Children[0])
-	visitNode(node.Children[1])
+	// NOTE: Fix bug where indexing empty children array
+	if len(node.Children) > 0 {
+		declareVar(node.Children[0])
+		visitNode(node.Children[1])
+	} else {
+		return
+	}
 }
 
 func handleProcDefs(node *parser.ASTNode) {
@@ -158,6 +166,8 @@ func declareVar(node *parser.ASTNode) {
 		}
 	}
 
+	// NOTE: Fixed bug of never binding the variables to the current AuxillaryStack!
+	auxStack.bind(varname, int(node.ID))
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      varname,
@@ -178,6 +188,8 @@ func declareName(node *parser.ASTNode) {
 		}
 	}
 
+	// NOTE: Fixed bug of never binding the variables to the current AuxillaryStack!
+	auxStack.bind(name, int(node.ID))
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      name,
@@ -190,6 +202,21 @@ func handleVar(node *parser.ASTNode) {
 	varname := node.Name
 	nodeID, ok := auxStack.lookup(varname)
 	if !ok {
+		// NOTE: Fixed bug of not checking GLOBAL_SCOPE
+		for _, value := range symbolTable {
+			if value.symbolName == varname {
+				if value.scopeLevel == GLOBAL_SCOPE {
+					symbolTable[int(node.ID)] = SemanticInfo{
+						nodeID:          int(node.ID),
+						symbolName:      varname,
+						scopeLevel:      GLOBAL_SCOPE,
+						declarationNode: GLOBAL_SCOPE,
+					}
+					return
+				}
+			}
+		}
+
 		// Undeclared variable error
 		panic("undeclared-variable: " + varname)
 	}
