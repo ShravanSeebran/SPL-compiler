@@ -1,7 +1,7 @@
 package analyser
 
 const (
-	SPL_PROG  string = "SPL_Program"
+	SPL_PROG  string = "SPL_PROG"
 	VARIABLES string = "VARIABLES"
 	VAR       string = "VAR"
 	NAME      string = "NAME"
@@ -21,6 +21,7 @@ const (
 	BRANCH    string = "BRANCH"
 	OUTPUT    string = "OUTPUT"
 	INPUT     string = "INPUT"
+	TERM      string = "TERM"
 	UNOP      string = "UNOP"
 	BINOP     string = "BINOP"
 )

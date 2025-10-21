@@ -51,6 +51,7 @@ func visitNode(node *parser.ASTNode) {
 	case MAXTHREE:
 		handleMaxThree(node)
 	case MAINPROG:
+		handleMainProg(node)
 	case ATOM:
 		handleAtom(node)
 	case ALGO:
@@ -67,6 +68,8 @@ func visitNode(node *parser.ASTNode) {
 		handleOutput(node)
 	case INPUT:
 		handleInput(node)
+	case TERM:
+		handleTerm(node)
 	case UNOP:
 		handleUnOp(node)
 	case BINOP:
