@@ -145,9 +145,9 @@ instr
     : HALT                      { $$ = NewNode("INSTR", "halt") }
     | PRINT output              { $$ = NewNode("INSTR", "print", $2) }
     | name LPAREN input RPAREN  { $$ = NewNode("INSTR", "call", $1, $3) }
-    | assign                    { $$ = NewNode("INSTR", "", $1) }
-    | loop                      { $$ = NewNode("INSTR", "", $1) }
-    | branch                    { $$ = NewNode("INSTR", "", $1) }
+    | assign                    { $$ = NewNode("INSTR", "assign", $1) }
+    | loop                      { $$ = NewNode("INSTR", "loop", $1) }
+    | branch                    { $$ = NewNode("INSTR", "branch", $1) }
     ;
 
 assign
@@ -156,17 +156,17 @@ assign
     ;
 
 loop
-    : WHILE term LBRACE algo RBRACE          { $$ = NewNode("LOOP", "", $2, $4) }
-    | DO LBRACE algo RBRACE UNTIL term       { $$ = NewNode("LOOP", "", $3, $6) }
+    : WHILE term LBRACE algo RBRACE          { $$ = NewNode("LOOP", "while", $2, $4) }
+    | DO LBRACE algo RBRACE UNTIL term       { $$ = NewNode("LOOP", "do", $3, $6) }
     ;
 
 branch
-    : IF term LBRACE algo RBRACE                           { $$ = NewNode("BRANCH", "", $2, $4) }
-    | IF term LBRACE algo RBRACE ELSE LBRACE algo RBRACE   { $$ = NewNode("BRANCH", "", $2, $4, $8) }
+    : IF term LBRACE algo RBRACE                           { $$ = NewNode("BRANCH", "if", $2, $4) }
+    | IF term LBRACE algo RBRACE ELSE LBRACE algo RBRACE   { $$ = NewNode("BRANCH", "ifelse", $2, $4, $8) }
     ;
 
 output
-    : atom   { $$ = NewNode("OUTPUT", "", $1) }
+    : atom   { $$ = NewNode("OUTPUT", "atom", $1) }
     | STRING { $$ = NewNode("OUTPUT", $1) }
     ;
 
@@ -178,9 +178,9 @@ input
     ;
 
 term
-    : atom                           { $$ = NewNode("TERM", "", $1) }
-    | LPAREN unop term RPAREN        { $$ = NewNode("TERM", "", $2, $3) }
-    | LPAREN term binop term RPAREN  { $$ = NewNode("TERM", "", $2, $3, $4) }
+    : atom                           { $$ = NewNode("TERM", "atom", $1) }
+    | LPAREN unop term RPAREN        { $$ = NewNode("TERM", "unop", $2, $3) }
+    | LPAREN term binop term RPAREN  { $$ = NewNode("TERM", "binop", $2, $3, $4) }
     ;
 
 unop

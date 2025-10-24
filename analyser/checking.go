@@ -1,7 +1,6 @@
-package checker
+package analyser
 
 import (
-	"SPL-compiler/analyser"
 	"SPL-compiler/parser"
 )
 
@@ -15,51 +14,51 @@ func checkNode(node *parser.ASTNode) {
 	}
 
 	switch node.Type {
-	case analyser.SPL_PROG:
+	case SPL_PROG:
 		checkProgram(node)
-	case analyser.VARIABLES:
+	case VARIABLES:
 		checkVariables(node)
-	case analyser.PROCDEFS:
+	case PROCDEFS:
 		checkProcDefs(node)
-	case analyser.PDEF:
+	case PDEF:
 		checkPDef(node)
-	case analyser.FUNCDEFS:
+	case FUNCDEFS:
 		checkFuncDefs(node)
-	case analyser.FDEF:
+	case FDEF:
 		checkFDef(node)
-	case analyser.VAR:
+	case VAR:
 		checkVar(node)
-	case analyser.NAME:
+	case NAME:
 		checkName(node)
-	case analyser.BODY:
+	case BODY:
 		checkBody(node)
-	case analyser.PARAM:
+	case PARAM:
 		checkParam(node)
-	case analyser.MAXTHREE:
+	case MAXTHREE:
 		checkMaxThree(node)
-	case analyser.MAINPROG:
+	case MAINPROG:
 		checkMainProg(node)
-	case analyser.ATOM:
+	case ATOM:
 		checkAtom(node)
-	case analyser.ALGO:
+	case ALGO:
 		checkAlgo(node)
-	case analyser.INSTR:
+	case INSTR:
 		checkInstr(node)
-	case analyser.ASSIGN:
+	case ASSIGN:
 		checkAssign(node)
-	case analyser.LOOP:
+	case LOOP:
 		checkLoop(node)
-	case analyser.BRANCH:
+	case BRANCH:
 		checkBranch(node)
-	case analyser.OUTPUT:
+	case OUTPUT:
 		checkOutput(node)
-	case analyser.INPUT:
+	case INPUT:
 		checkInput(node)
-	case analyser.TERM:
+	case TERM:
 		checkTerm(node)
-	case analyser.UNOP:
+	case UNOP:
 		checkUnOp(node)
-	case analyser.BINOP:
+	case BINOP:
 		checkBinOp(node)
 	default:
 		panic("unchecked-node-type: " + node.Type)
@@ -130,25 +129,19 @@ func checkParam(node *parser.ASTNode) {
 }
 
 func checkMaxThree(node *parser.ASTNode) {
-	if len(node.Children) > 0 {
-		for _, child := range node.Children {
-			n := checkVar(child)
-			if n != "numeric" {
-				panic("expected numeric type for variable")
-			}
+	for _, child := range node.Children {
+		n := checkVar(child)
+		if n != "numeric" {
+			panic("expected numeric type for variable")
 		}
-	} else {
-		return
 	}
 }
 
-func checkVar(node *parser.ASTNode) string {
+func checkVar(_ *parser.ASTNode) string {
 	return "numeric"
 }
 
 func checkName(node *parser.ASTNode) {
-	// NOTE: Find out about what type-less means
-	// TODO: implement checkName
 }
 
 func checkBody(node *parser.ASTNode) {
@@ -179,14 +172,10 @@ func checkOutput(node *parser.ASTNode) {
 }
 
 func checkInput(node *parser.ASTNode) {
-	if len(node.Children) > 0 {
-		for _, child := range node.Children {
-			if n := checkVar(child); n != "numeric" {
-				panic("expected numeric type for variable")
-			}
+	for _, child := range node.Children {
+		if n := checkVar(child); n != "numeric" {
+			panic("expected numeric type for variable")
 		}
-	} else {
-		return
 	}
 }
 
@@ -201,21 +190,19 @@ func checkAssign(node *parser.ASTNode) {
 		if n := checkVar(node.Children[0]); n != "numeric" {
 			panic("expected numeric type for variable")
 		}
-		if n := checkVar(node.Children[1]); n != "numeric" {
+		if n := checkTerm(node.Children[1]); n != "numeric" {
 			panic("expected numeric type for variable")
 		}
 	}
 }
 
 func checkLoop(node *parser.ASTNode) {
-	// TODO: Need to update parser with this name
 	if node.Name == "while" {
 		b := checkTerm(node.Children[0])
 		if b != "boolean" {
 			panic("expected boolean type for WHILE condition")
 		}
 		checkNode(node.Children[1]) // ALGO
-		// TODO: Need to update parser with this name
 	} else if node.Name == "do" {
 		checkNode(node.Children[0]) // ALGO
 		b := checkTerm(node.Children[1])
@@ -228,14 +215,12 @@ func checkLoop(node *parser.ASTNode) {
 }
 
 func checkBranch(node *parser.ASTNode) {
-	// TODO: Need to update parser with this name
 	if node.Name == "if" {
 		b := checkTerm(node.Children[0])
 		if b != "boolean" {
 			panic("expected boolean type for IF condition")
 		}
 		checkNode(node.Children[1]) // ALGO
-		// TODO: Need to update parser with this name
 	} else if node.Name == "ifelse" {
 		b := checkTerm(node.Children[0])
 		if b != "boolean" {
@@ -249,14 +234,12 @@ func checkBranch(node *parser.ASTNode) {
 }
 
 func checkTerm(node *parser.ASTNode) string {
-	// TODO: Need to update parser with this name
 	if node.Name == "atom" {
 		n := checkAtom(node.Children[0])
 		if n != "numeric" {
 			panic("expected numeric type for atom")
 		}
 		return n
-		// TODO: Need to update parser with this name
 	} else if node.Name == "unop" {
 		t := checkUnOp(node.Children[0])
 		s := checkTerm(node.Children[1])
@@ -267,7 +250,6 @@ func checkTerm(node *parser.ASTNode) string {
 		} else {
 			panic("expected numeric or boolean type for unop")
 		}
-		// TODO: Need to update parser with this name
 	} else if node.Name == "binop" {
 		t := checkTerm(node.Children[0])
 		s := checkBinOp(node.Children[1])
@@ -286,8 +268,6 @@ func checkTerm(node *parser.ASTNode) string {
 	}
 }
 
-// NOTE: Check if node.Name is correct in parser
-// like "neg" or "-" or "NEG"
 func checkUnOp(node *parser.ASTNode) string {
 	if node.Name == "neg" {
 		return "numeric"
@@ -298,12 +278,10 @@ func checkUnOp(node *parser.ASTNode) string {
 	}
 }
 
-// NOTE: Check if node.Name is correct in parser
-// like "eq" or "==" or "EQ"
 func checkBinOp(node *parser.ASTNode) string {
 	if node.Name == "eq" {
 		return "comparison"
-	} else if node.Name == "gt" {
+	} else if node.Name == ">" {
 		return "comparison"
 	} else if node.Name == "or" {
 		return "boolean"
@@ -318,7 +296,7 @@ func checkBinOp(node *parser.ASTNode) string {
 	} else if node.Name == "div" {
 		return "numeric"
 	} else {
-		panic("expected 'eq', 'gt', 'or', 'and', 'plus', 'minus', 'mult', or 'div' BinOp node name")
+		panic("expected 'eq', '>', 'or', 'and', 'plus', 'minus', 'mult', or 'div' BinOp node name")
 	}
 }
 

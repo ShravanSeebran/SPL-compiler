@@ -1,11 +1,15 @@
 package analyser
 
-import "SPL-compiler/parser"
+import (
+	"SPL-compiler/parser"
+	"fmt"
+)
 
 var (
 	symbolTable     SymbolTable
 	auxStack        *AuxillaryStack
 	currentScope    int
+	varIndex        int
 	GLOBAL_SCOPE    int
 	PROCEDURE_SCOPE int
 	FUNCTION_SCOPE  int
@@ -15,9 +19,10 @@ func initialiseAnalyser() {
 	symbolTable = make(SymbolTable)
 	auxStack = Empty()
 	currentScope = 0
+	varIndex = 0
 }
 
-func analyseProgram(root *parser.ASTNode) {
+func AnalyseProgram(root *parser.ASTNode) {
 	initialiseAnalyser()
 	visitNode(root)
 }
@@ -92,15 +97,11 @@ func handleProgram(node *parser.ASTNode) {
 		visitNode(child)
 		currentScope = auxStack.exit()
 	}
-	// NOTE: Alternative fix for handleVar checking GLOBAL_SCOPE
-	// uncomment the following line and comment the above one
-	// currentScope = auxStack.exit()
 
 	currentScope = auxStack.exit() // should be -1
 }
 
 func handleVariables(node *parser.ASTNode) {
-	// NOTE: Fix bug where indexing empty children array
 	if len(node.Children) > 0 {
 		declareVar(node.Children[0])
 		visitNode(node.Children[1])
@@ -166,14 +167,15 @@ func declareVar(node *parser.ASTNode) {
 		}
 	}
 
-	// NOTE: Fixed bug of never binding the variables to the current AuxillaryStack!
 	auxStack.bind(varname, int(node.ID))
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      varname,
+		uniqueID:        fmt.Sprintf("v%d", varIndex),
 		scopeLevel:      currentScope,
 		declarationNode: int(node.ID),
 	}
+	varIndex++
 }
 
 func declareName(node *parser.ASTNode) {
@@ -188,11 +190,11 @@ func declareName(node *parser.ASTNode) {
 		}
 	}
 
-	// NOTE: Fixed bug of never binding the variables to the current AuxillaryStack!
 	auxStack.bind(name, int(node.ID))
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      name,
+		uniqueID:        name,
 		scopeLevel:      currentScope,
 		declarationNode: int(node.ID),
 	}
@@ -202,13 +204,13 @@ func handleVar(node *parser.ASTNode) {
 	varname := node.Name
 	nodeID, ok := auxStack.lookup(varname)
 	if !ok {
-		// NOTE: Fixed bug of not checking GLOBAL_SCOPE
 		for _, value := range symbolTable {
 			if value.symbolName == varname {
 				if value.scopeLevel == GLOBAL_SCOPE {
 					symbolTable[int(node.ID)] = SemanticInfo{
 						nodeID:          int(node.ID),
 						symbolName:      varname,
+						uniqueID:        value.uniqueID,
 						scopeLevel:      GLOBAL_SCOPE,
 						declarationNode: GLOBAL_SCOPE,
 					}
@@ -230,6 +232,7 @@ func handleVar(node *parser.ASTNode) {
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      varname,
+		uniqueID:        symbolTable[nodeID].uniqueID,
 		scopeLevel:      symbolTable[nodeID].scopeLevel,
 		declarationNode: symbolTable[nodeID].declarationNode,
 	}
@@ -252,6 +255,7 @@ func handleName(node *parser.ASTNode) {
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      name,
+		uniqueID:        name,
 		scopeLevel:      symbolTable[nodeID].scopeLevel,
 		declarationNode: symbolTable[nodeID].declarationNode,
 	}

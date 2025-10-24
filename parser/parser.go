@@ -761,19 +761,19 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:148
 		{
-			yyVAL.node = NewNode("INSTR", "", yyDollar[1].node)
+			yyVAL.node = NewNode("INSTR", "assign", yyDollar[1].node)
 		}
 	case 27:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:149
 		{
-			yyVAL.node = NewNode("INSTR", "", yyDollar[1].node)
+			yyVAL.node = NewNode("INSTR", "loop", yyDollar[1].node)
 		}
 	case 28:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:150
 		{
-			yyVAL.node = NewNode("INSTR", "", yyDollar[1].node)
+			yyVAL.node = NewNode("INSTR", "branch", yyDollar[1].node)
 		}
 	case 29:
 		yyDollar = yyS[yypt-6 : yypt+1]
@@ -791,31 +791,31 @@ yydefault:
 		yyDollar = yyS[yypt-5 : yypt+1]
 //line spl.y:159
 		{
-			yyVAL.node = NewNode("LOOP", "", yyDollar[2].node, yyDollar[4].node)
+			yyVAL.node = NewNode("LOOP", "while", yyDollar[2].node, yyDollar[4].node)
 		}
 	case 32:
 		yyDollar = yyS[yypt-6 : yypt+1]
 //line spl.y:160
 		{
-			yyVAL.node = NewNode("LOOP", "", yyDollar[3].node, yyDollar[6].node)
+			yyVAL.node = NewNode("LOOP", "do", yyDollar[3].node, yyDollar[6].node)
 		}
 	case 33:
 		yyDollar = yyS[yypt-5 : yypt+1]
 //line spl.y:164
 		{
-			yyVAL.node = NewNode("BRANCH", "", yyDollar[2].node, yyDollar[4].node)
+			yyVAL.node = NewNode("BRANCH", "if", yyDollar[2].node, yyDollar[4].node)
 		}
 	case 34:
 		yyDollar = yyS[yypt-9 : yypt+1]
 //line spl.y:165
 		{
-			yyVAL.node = NewNode("BRANCH", "", yyDollar[2].node, yyDollar[4].node, yyDollar[8].node)
+			yyVAL.node = NewNode("BRANCH", "ifelse", yyDollar[2].node, yyDollar[4].node, yyDollar[8].node)
 		}
 	case 35:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:169
 		{
-			yyVAL.node = NewNode("OUTPUT", "", yyDollar[1].node)
+			yyVAL.node = NewNode("OUTPUT", "atom", yyDollar[1].node)
 		}
 	case 36:
 		yyDollar = yyS[yypt-1 : yypt+1]
@@ -851,19 +851,19 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:181
 		{
-			yyVAL.node = NewNode("TERM", "", yyDollar[1].node)
+			yyVAL.node = NewNode("TERM", "atom", yyDollar[1].node)
 		}
 	case 42:
 		yyDollar = yyS[yypt-4 : yypt+1]
 //line spl.y:182
 		{
-			yyVAL.node = NewNode("TERM", "", yyDollar[2].node, yyDollar[3].node)
+			yyVAL.node = NewNode("TERM", "unop", yyDollar[2].node, yyDollar[3].node)
 		}
 	case 43:
 		yyDollar = yyS[yypt-5 : yypt+1]
 //line spl.y:183
 		{
-			yyVAL.node = NewNode("TERM", "", yyDollar[2].node, yyDollar[3].node, yyDollar[4].node)
+			yyVAL.node = NewNode("TERM", "binop", yyDollar[2].node, yyDollar[3].node, yyDollar[4].node)
 		}
 	case 44:
 		yyDollar = yyS[yypt-1 : yypt+1]
