@@ -108,8 +108,8 @@ funcdefs
     ;
 
 fdef
-    : name LPAREN param RPAREN LBRACE body SEMICOLON RETURN atom RBRACE
-        { $$ = NewNode("FDEF", "", $1, $3, $6, $9) }
+    : name LPAREN param RPAREN LBRACE body RETURN atom RBRACE
+        { $$ = NewNode("FDEF", "", $1, $3, $6, $8) }
     ;
 
 body
@@ -137,7 +137,7 @@ atom
     ;
 
 algo 
-    : instr { $$ = NewNode("ALGO", "", $1) }
+    : instr SEMICOLON { $$ = NewNode("ALGO", "", $1) }
     | instr SEMICOLON algo { $$ = NewNode("ALGO", "", $1, $3) }
     ;
 

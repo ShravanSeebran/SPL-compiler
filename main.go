@@ -44,16 +44,16 @@ func PrettyPrintASTNode(n *parser.ASTNode, prefix string, isTail bool) {
 func runParserTests() {
 	input := `glob { }
 	proc { }
-	func { }
+	func { f(n) { local {a b c} b = n; return b} }
 	main {
 		var {oompie}
 		print poep;
 		while (oompie > 0) {
 			print oompies;
 			oompie = (oompie minus 1);
-			oompie = sit(tannie oupa)
+			oompie = sit(tannie oupa);
 		};
-		halt
+		halt;
 	}`
 	fmt.Println("Parsing input:\n---\n" + input + "\n---")
 
