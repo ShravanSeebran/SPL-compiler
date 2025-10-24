@@ -9,7 +9,7 @@ import (
 type SemanticInfo struct {
 	nodeID          int
 	symbolName      string
-	dataType        string
+	uniqueID        string
 	scopeLevel      int
 	declarationNode int
 }
@@ -29,11 +29,11 @@ func PrettyPrintSymbolTable(st SymbolTable) {
 	sort.Ints(keys)
 
 	widths := struct {
-		nodeID, symbolName, dataType, scopeLevel, declarationNode int
+		nodeID, symbolName, uniqueID, scopeLevel, declarationNode int
 	}{
 		nodeID:          6,
 		symbolName:      11,
-		dataType:        9,
+		uniqueID:        9,
 		scopeLevel:      11,
 		declarationNode: 16,
 	}
@@ -42,8 +42,8 @@ func PrettyPrintSymbolTable(st SymbolTable) {
 		if len(info.symbolName) > widths.symbolName {
 			widths.symbolName = len(info.symbolName)
 		}
-		if len(info.dataType) > widths.dataType {
-			widths.dataType = len(info.dataType)
+		if len(info.uniqueID) > widths.uniqueID {
+			widths.uniqueID = len(info.uniqueID)
 		}
 		if len(fmt.Sprint(info.nodeID)) > widths.nodeID {
 			widths.nodeID = len(fmt.Sprint(info.nodeID))
@@ -59,7 +59,7 @@ func PrettyPrintSymbolTable(st SymbolTable) {
 	separator := fmt.Sprintf("+-%s-+-%s-+-%s-+-%s-+-%s-+",
 		strings.Repeat("-", widths.nodeID),
 		strings.Repeat("-", widths.symbolName),
-		strings.Repeat("-", widths.dataType),
+		strings.Repeat("-", widths.uniqueID),
 		strings.Repeat("-", widths.scopeLevel),
 		strings.Repeat("-", widths.declarationNode))
 
@@ -67,7 +67,7 @@ func PrettyPrintSymbolTable(st SymbolTable) {
 	fmt.Printf("| %-*s | %-*s | %-*s | %-*s | %-*s |\n",
 		widths.nodeID, "NodeID",
 		widths.symbolName, "Symbol Name",
-		widths.dataType, "Data Type",
+		widths.uniqueID, "Unique ID",
 		widths.scopeLevel, "Scope Level",
 		widths.declarationNode, "Declaration Node")
 	fmt.Println(separator)
@@ -77,7 +77,7 @@ func PrettyPrintSymbolTable(st SymbolTable) {
 		fmt.Printf("| %-*d | %-*s | %-*s | %-*d | %-*d |\n",
 			widths.nodeID, info.nodeID,
 			widths.symbolName, info.symbolName,
-			widths.dataType, info.dataType,
+			widths.uniqueID, info.uniqueID,
 			widths.scopeLevel, info.scopeLevel,
 			widths.declarationNode, info.declarationNode)
 	}

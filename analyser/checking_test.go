@@ -8,12 +8,12 @@ import (
 	"testing"
 )
 
-func TestSymbolTable(t *testing.T) {
+func TestChecker(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
 	}{
-		{"Redeclaration of global variables in main scope", `
+		{"Testing ...", `
 		  glob { x y }
 		  proc {}
 		  func {}
@@ -22,12 +22,13 @@ func TestSymbolTable(t *testing.T) {
 			halt 
 		  }
 		`},
-		{"Using global variable in local function scope", `
+		{"Testing ...", `
 		  glob { x y }
-		  proc { f(a b) { local { c } x = a } g(a b) { local { c } x = a } }
+		  proc {}
 		  func {}
 		  main { 
 			var { x z } 
+			x = ( x plus z );
 			halt 
 		  }
 		`},
@@ -35,13 +36,13 @@ func TestSymbolTable(t *testing.T) {
 	for _, tt := range tests {
 		fmt.Println("\n-------------- ", tt.name, " --------------")
 		fmt.Println(tt.input)
-		ast := testParse(tt.input)
-		testProgram(ast)
+		ast := generateAST(tt.input)
+		testChecker(ast)
 
 	}
 }
 
-func testParse(input string) *parser.ASTNode {
+func generateAST(input string) *parser.ASTNode {
 	l := lexer.New(input)
 	lexerAdapter := &parser.LexerAdapter{L: l}
 	result, err := parser.Parse(lexerAdapter)
@@ -51,8 +52,7 @@ func testParse(input string) *parser.ASTNode {
 	}
 
 	if result != nil {
-		fmt.Println("\n--- Abstract Syntax Tree ---")
-		parser.PrintAST(result, 0)
+		fmt.Println("Parsing finished, AST generated.")
 	} else {
 		fmt.Fprintf(os.Stderr, "Parsing finished, but no AST was generated.\n")
 	}
@@ -60,8 +60,8 @@ func testParse(input string) *parser.ASTNode {
 	return parser.ResultAST
 }
 
-func testProgram(ast *parser.ASTNode) {
-	analyseProgram(ast)
-	fmt.Println("\n---Symbol Table ---")
-	PrettyPrintSymbolTable(symbolTable)
+func testChecker(ast *parser.ASTNode) {
+	AnalyseProgram(ast)
+	TypeCheckProgram(ast)
+	fmt.Println("Type checking finished.")
 }
