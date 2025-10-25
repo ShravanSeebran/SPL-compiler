@@ -13,34 +13,6 @@ func main() {
 	runParserTests()
 }
 
-func PrettyPrintASTNode(n *parser.ASTNode, prefix string, isTail bool) {
-	if n == nil {
-		return
-	}
-
-	connector := "├── "
-	if isTail {
-		connector = "└── "
-	}
-	fmt.Printf("%s%s[%d] %s", prefix, connector, n.ID, n.Type)
-	if n.Name != "" {
-		fmt.Printf(": %s", n.Name)
-	}
-	fmt.Println()
-
-	childPrefix := prefix
-	if isTail {
-		childPrefix += "    "
-	} else {
-		childPrefix += "│   "
-	}
-
-	for i, child := range n.Children {
-		isLast := i == len(n.Children)-1
-		PrettyPrintASTNode(child, childPrefix, isLast)
-	}
-}
-
 func runParserTests() {
 	input := `glob { }
 	proc { }
@@ -51,9 +23,9 @@ func runParserTests() {
 		while (oompie > 0) {
 			print oompies;
 			oompie = (oompie minus 1);
-			oompie = sit(tannie oupa);
+			oompie = sit(tannie oupa)
 		};
-		halt;
+		halt
 	}`
 	fmt.Println("Parsing input:\n---\n" + input + "\n---")
 
@@ -82,7 +54,7 @@ func runParserTests() {
 		fmt.Fprintf(os.Stderr, "Parsing finished, but no AST was generated.\n")
 	}
 	fmt.Println("\nPretty Printed AST:")
-	PrettyPrintASTNode(result, "", true)
+	parser.PrettyPrintASTNode(result, "", true)
 }
 
 func runExamples() {
