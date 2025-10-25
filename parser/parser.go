@@ -134,7 +134,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line spl.y:207
+//line spl.y:212
 
 func Parse(lex yyLexer) (*ASTNode, error) {
 	if yyParse(lex) != 0 {
@@ -154,104 +154,107 @@ var yyExca = [...]int8{
 	-1, 1,
 	1, -1,
 	-2, 0,
-	-1, 57,
+	-1, 58,
 	19, 5,
 	-2, 4,
 }
 
 const yyPrivate = 57344
 
-const yyLast = 151
+const yyLast = 158
 
-var yyAct = [...]int8{
-	68, 89, 72, 80, 5, 90, 5, 49, 4, 73,
-	33, 6, 69, 67, 8, 53, 6, 69, 21, 20,
-	74, 6, 24, 14, 19, 29, 13, 25, 13, 51,
-	52, 59, 60, 21, 61, 6, 69, 71, 27, 21,
-	120, 125, 27, 118, 74, 113, 58, 123, 5, 87,
-	88, 50, 57, 74, 31, 48, 62, 36, 41, 6,
-	69, 108, 66, 93, 76, 58, 77, 46, 57, 69,
-	50, 45, 79, 78, 83, 37, 58, 86, 58, 92,
-	81, 30, 15, 7, 91, 58, 97, 82, 98, 84,
-	75, 95, 58, 110, 47, 44, 39, 38, 28, 22,
-	112, 10, 115, 3, 119, 111, 81, 114, 94, 40,
-	58, 117, 23, 96, 70, 32, 17, 109, 122, 121,
-	64, 116, 11, 63, 58, 124, 100, 101, 102, 103,
-	104, 105, 106, 107, 43, 16, 34, 35, 18, 9,
-	2, 99, 85, 65, 56, 55, 54, 42, 26, 12,
-	1,
+var yyAct = [...]uint8{
+	70, 50, 113, 51, 5, 83, 5, 4, 6, 71,
+	74, 20, 6, 8, 6, 71, 69, 75, 21, 14,
+	73, 130, 24, 121, 54, 29, 52, 53, 60, 61,
+	117, 62, 19, 21, 111, 13, 96, 13, 76, 21,
+	95, 128, 25, 90, 91, 79, 59, 27, 5, 58,
+	41, 27, 93, 6, 71, 63, 103, 104, 105, 106,
+	107, 108, 109, 110, 46, 36, 21, 59, 82, 31,
+	76, 68, 45, 78, 37, 30, 76, 81, 59, 92,
+	59, 94, 80, 15, 86, 6, 71, 89, 59, 100,
+	84, 58, 71, 7, 59, 112, 87, 59, 85, 101,
+	114, 77, 98, 65, 47, 116, 44, 39, 38, 28,
+	22, 10, 3, 119, 124, 123, 115, 84, 118, 97,
+	40, 23, 99, 59, 72, 127, 114, 32, 17, 59,
+	129, 125, 122, 66, 126, 120, 11, 64, 43, 49,
+	34, 35, 18, 9, 2, 102, 88, 67, 57, 16,
+	56, 55, 42, 48, 33, 26, 12, 1,
 }
 
 var yyPact = [...]int16{
-	136, -1000, 82, -13, 61, -13, -1000, 134, -1000, 80,
-	-11, 60, -11, 97, -1000, 132, -1000, -13, 78, 92,
-	-1000, -13, -11, 77, -13, 59, -11, 96, 128, -1000,
-	130, -1000, -13, 53, 76, 75, 89, -1000, -13, 125,
-	74, 49, 45, 73, 128, 18, -1000, -13, 113, -1000,
-	102, -1000, -23, 95, -1000, -1000, -1000, -1000, 14, 1,
-	69, 1, 44, -18, 18, -1000, -1000, -1000, -1000, -1000,
-	-18, 34, 68, -1000, 25, 18, 63, 18, 41, -1000,
-	88, -18, 94, -1000, 18, 1, 100, -1000, -1000, 39,
-	99, 18, -1000, -1000, -1000, -18, -18, 23, 87, 1,
-	-1000, -1000, -1000, -1000, -1000, -1000, -1000, -1000, 106, 18,
-	21, -1000, 84, -1000, -1000, 20, 1, -1000, 101, -1000,
-	-1000, -1000, 26, 18, 19, -1000,
+	140, -1000, 91, -22, 71, -22, -1000, 138, -1000, 90,
+	-15, 61, -15, 109, -1000, 136, -1000, -22, 89, 101,
+	-1000, -22, -15, 88, -22, 53, -15, 108, 132, -1000,
+	134, -1000, -22, 52, 87, 86, 100, -1000, -22, 129,
+	85, 50, 42, 83, 131, 15, -1000, -22, 127, 82,
+	-1000, 115, -1000, -20, 105, -1000, -1000, -1000, -1000, -3,
+	51, 80, 51, 23, -26, -22, 15, -1000, -1000, -1000,
+	-1000, -1000, -26, 57, 75, -1000, 19, 15, 31, 15,
+	18, 14, -1000, 99, -26, 103, -1000, 15, 51, 30,
+	-1000, -1000, 12, 15, -1000, -1000, 15, -1000, -26, -26,
+	8, 98, 51, -1000, -1000, -1000, -1000, -1000, -1000, -1000,
+	-1000, 120, 1, -1000, 114, -1000, 95, -1000, -1000, 94,
+	51, 117, 15, -1000, -1000, -1000, 20, -1000, 15, -1,
+	-1000,
 }
 
 var yyPgo = [...]uint8{
-	0, 150, 8, 0, 15, 122, 149, 27, 148, 10,
-	7, 24, 19, 147, 9, 1, 5, 146, 145, 144,
-	143, 3, 2, 142, 141,
+	0, 157, 7, 0, 24, 136, 156, 42, 155, 154,
+	153, 2, 32, 11, 152, 17, 1, 3, 151, 150,
+	148, 147, 5, 10, 146, 145,
 }
 
 var yyR1 = [...]int8{
 	0, 1, 2, 2, 3, 4, 5, 5, 6, 7,
-	7, 8, 9, 11, 12, 12, 12, 12, 13, 14,
-	14, 15, 15, 10, 10, 16, 16, 16, 16, 16,
-	16, 17, 17, 18, 18, 19, 19, 20, 20, 21,
-	21, 21, 21, 22, 22, 22, 23, 23, 24, 24,
-	24, 24, 24, 24, 24, 24,
+	7, 8, 9, 10, 12, 13, 13, 13, 13, 14,
+	15, 15, 16, 16, 11, 11, 17, 17, 17, 17,
+	17, 17, 18, 18, 19, 19, 20, 20, 21, 21,
+	22, 22, 22, 22, 23, 23, 23, 24, 24, 25,
+	25, 25, 25, 25, 25, 25, 25,
 }
 
 var yyR2 = [...]int8{
 	0, 16, 0, 2, 1, 1, 0, 2, 7, 0,
-	2, 9, 5, 1, 0, 1, 2, 3, 5, 1,
-	1, 1, 3, 2, 3, 1, 2, 4, 1, 1,
-	1, 6, 3, 5, 6, 5, 9, 1, 1, 0,
-	1, 2, 3, 1, 4, 5, 1, 1, 1, 1,
-	1, 1, 1, 1, 1, 1,
+	2, 9, 5, 5, 1, 0, 1, 2, 3, 5,
+	1, 1, 1, 3, 2, 3, 1, 2, 4, 1,
+	1, 1, 6, 3, 5, 6, 5, 9, 1, 1,
+	0, 1, 2, 3, 1, 4, 5, 1, 1, 1,
+	1, 1, 1, 1, 1, 1, 1,
 }
 
 var yyChk = [...]int16{
 	-1000, -1, 4, 21, -2, -3, 34, 22, -2, 5,
-	21, -5, -6, -4, 34, 22, -5, 19, 6, -11,
-	-12, -3, 21, 20, -3, -7, -8, -4, 21, -3,
-	22, -7, 19, -9, 8, 7, -11, 22, 21, 21,
-	20, -12, -13, 9, 21, 22, 22, 21, -9, -10,
-	-16, 11, 12, -4, -17, -18, -19, 34, -3, 13,
-	14, 16, -2, 10, 18, -20, -14, 36, -3, 35,
-	19, 23, -22, -14, 19, 21, -22, 22, -14, -10,
-	-21, -14, -4, -22, 21, -23, -22, 24, 25, -15,
-	-16, 21, -15, 22, 20, -14, 19, -15, -22, -24,
-	26, 27, 28, 29, 30, 31, 32, 33, 22, 18,
-	-15, -14, -21, 22, 20, -22, 15, -15, 22, 20,
-	20, -22, 17, 21, -15, 22,
+	21, -5, -6, -4, 34, 22, -5, 19, 6, -12,
+	-13, -3, 21, 20, -3, -7, -8, -4, 21, -3,
+	22, -7, 19, -9, 8, 7, -12, 22, 21, 21,
+	20, -13, -14, 9, 21, 22, 22, 21, -10, 8,
+	-16, -17, 11, 12, -4, -18, -19, -20, 34, -3,
+	13, 14, 16, -2, 10, 21, 18, -21, -15, 36,
+	-3, 35, 19, 23, -23, -15, 19, 21, -23, 22,
+	-15, -13, -16, -22, -15, -4, -23, 21, -24, -23,
+	24, 25, -16, 21, -16, 22, 22, 20, -15, 19,
+	-16, -23, -25, 26, 27, 28, 29, 30, 31, 32,
+	33, 22, -16, -11, -17, -15, -22, 22, 20, -23,
+	15, 22, 18, 20, 20, -23, 17, -11, 21, -16,
+	22,
 }
 
 var yyDef = [...]int8{
 	0, -2, 0, 2, 0, 2, 4, 0, 3, 0,
-	6, 0, 6, 0, 5, 0, 7, 14, 0, 0,
-	13, 15, 9, 0, 16, 0, 9, 0, 0, 17,
-	0, 10, 14, 0, 0, 0, 0, 8, 14, 0,
-	0, 0, 0, 0, 0, 0, 1, 2, 0, 12,
-	0, 25, 0, 0, 28, 29, 30, -2, 0, 0,
-	0, 0, 0, 0, 23, 26, 37, 38, 19, 20,
-	39, 0, 0, 43, 0, 0, 0, 0, 0, 24,
-	0, 40, 0, 32, 0, 0, 0, 46, 47, 0,
-	21, 0, 18, 11, 27, 41, 39, 0, 0, 0,
-	48, 49, 50, 51, 52, 53, 54, 55, 0, 0,
-	0, 42, 0, 33, 44, 0, 0, 22, 35, 31,
-	45, 34, 0, 0, 0, 36,
+	6, 0, 6, 0, 5, 0, 7, 15, 0, 0,
+	14, 16, 9, 0, 17, 0, 9, 0, 0, 18,
+	0, 10, 15, 0, 0, 0, 0, 8, 15, 0,
+	0, 0, 0, 0, 0, 0, 1, 2, 0, 0,
+	12, 22, 26, 0, 0, 29, 30, 31, -2, 0,
+	0, 0, 0, 0, 0, 15, 0, 27, 38, 39,
+	20, 21, 40, 0, 0, 44, 0, 0, 0, 0,
+	0, 0, 23, 0, 41, 0, 33, 0, 0, 0,
+	47, 48, 0, 0, 19, 11, 0, 28, 42, 40,
+	0, 0, 0, 49, 50, 51, 52, 53, 54, 55,
+	56, 0, 0, 13, 0, 43, 0, 34, 45, 0,
+	0, 36, 24, 32, 46, 35, 0, 25, 0, 0,
+	37,
 }
 
 var yyTok1 = [...]int8{
@@ -681,260 +684,266 @@ yydefault:
 			yyVAL.node = NewNode("BODY", "", yyDollar[3].node, yyDollar[5].node)
 		}
 	case 13:
+		yyDollar = yyS[yypt-5 : yypt+1]
+//line spl.y:122
+		{
+			yyVAL.node = NewNode("BODY", "", yyDollar[3].node, yyDollar[5].node)
+		}
+	case 14:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:120
+//line spl.y:125
 		{
 			yyVAL.node = NewNode("PARAM", "", yyDollar[1].node)
 		}
-	case 14:
+	case 15:
 		yyDollar = yyS[yypt-0 : yypt+1]
-//line spl.y:123
+//line spl.y:128
 		{
 			yyVAL.node = NewNode("MAXTHREE", "empty")
 		}
-	case 15:
+	case 16:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:124
+//line spl.y:129
 		{
 			yyVAL.node = NewNode("MAXTHREE", "", yyDollar[1].node)
 		}
-	case 16:
+	case 17:
 		yyDollar = yyS[yypt-2 : yypt+1]
-//line spl.y:125
+//line spl.y:130
 		{
 			yyVAL.node = NewNode("MAXTHREE", "", yyDollar[1].node, yyDollar[2].node)
 		}
-	case 17:
+	case 18:
 		yyDollar = yyS[yypt-3 : yypt+1]
-//line spl.y:126
+//line spl.y:131
 		{
 			yyVAL.node = NewNode("MAXTHREE", "", yyDollar[1].node, yyDollar[2].node, yyDollar[3].node)
 		}
-	case 18:
+	case 19:
 		yyDollar = yyS[yypt-5 : yypt+1]
-//line spl.y:131
+//line spl.y:136
 		{
 			yyVAL.node = NewNode("MAINPROG", "", yyDollar[3].node, yyDollar[5].node)
 		}
-	case 19:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:135
-		{
-			yyVAL.node = NewNode("ATOM", "Var", yyDollar[1].node)
-		}
 	case 20:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:136
-		{
-			yyVAL.node = NewNode("ATOM", yyDollar[1].Str)
-		}
-	case 21:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:140
 		{
-			yyVAL.node = NewNode("ALGO", "", yyDollar[1].node)
+			yyVAL.node = NewNode("ATOM", "Var", yyDollar[1].node)
 		}
-	case 22:
-		yyDollar = yyS[yypt-3 : yypt+1]
+	case 21:
+		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:141
 		{
-			yyVAL.node = NewNode("ALGO", "", yyDollar[1].node, yyDollar[3].node)
+			yyVAL.node = NewNode("ATOM", yyDollar[1].Str)
 		}
-	case 23:
-		yyDollar = yyS[yypt-2 : yypt+1]
+	case 22:
+		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:145
 		{
 			yyVAL.node = NewNode("ALGO", "", yyDollar[1].node)
 		}
-	case 24:
+	case 23:
 		yyDollar = yyS[yypt-3 : yypt+1]
 //line spl.y:146
 		{
 			yyVAL.node = NewNode("ALGO", "", yyDollar[1].node, yyDollar[3].node)
 		}
-	case 25:
-		yyDollar = yyS[yypt-1 : yypt+1]
+	case 24:
+		yyDollar = yyS[yypt-2 : yypt+1]
 //line spl.y:150
 		{
-			yyVAL.node = NewNode("INSTR", "halt")
+			yyVAL.node = NewNode("ALGO", "", yyDollar[1].node)
 		}
-	case 26:
-		yyDollar = yyS[yypt-2 : yypt+1]
+	case 25:
+		yyDollar = yyS[yypt-3 : yypt+1]
 //line spl.y:151
 		{
-			yyVAL.node = NewNode("INSTR", "print", yyDollar[2].node)
+			yyVAL.node = NewNode("ALGO", "", yyDollar[1].node, yyDollar[3].node)
 		}
-	case 27:
-		yyDollar = yyS[yypt-4 : yypt+1]
-//line spl.y:152
-		{
-			yyVAL.node = NewNode("INSTR", "call", yyDollar[1].node, yyDollar[3].node)
-		}
-	case 28:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:153
-		{
-			yyVAL.node = NewNode("INSTR", "assign", yyDollar[1].node)
-		}
-	case 29:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:154
-		{
-			yyVAL.node = NewNode("INSTR", "loop", yyDollar[1].node)
-		}
-	case 30:
+	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:155
 		{
-			yyVAL.node = NewNode("INSTR", "branch", yyDollar[1].node)
+			yyVAL.node = NewNode("INSTR", "halt")
+		}
+	case 27:
+		yyDollar = yyS[yypt-2 : yypt+1]
+//line spl.y:156
+		{
+			yyVAL.node = NewNode("INSTR", "print", yyDollar[2].node)
+		}
+	case 28:
+		yyDollar = yyS[yypt-4 : yypt+1]
+//line spl.y:157
+		{
+			yyVAL.node = NewNode("INSTR", "call", yyDollar[1].node, yyDollar[3].node)
+		}
+	case 29:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:158
+		{
+			yyVAL.node = NewNode("INSTR", "assign", yyDollar[1].node)
+		}
+	case 30:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:159
+		{
+			yyVAL.node = NewNode("INSTR", "loop", yyDollar[1].node)
 		}
 	case 31:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:160
+		{
+			yyVAL.node = NewNode("INSTR", "branch", yyDollar[1].node)
+		}
+	case 32:
 		yyDollar = yyS[yypt-6 : yypt+1]
-//line spl.y:159
+//line spl.y:164
 		{
 			yyVAL.node = NewNode("ASSIGN", "call", yyDollar[1].node, yyDollar[3].node, yyDollar[5].node)
 		}
-	case 32:
+	case 33:
 		yyDollar = yyS[yypt-3 : yypt+1]
-//line spl.y:160
+//line spl.y:165
 		{
 			yyVAL.node = NewNode("ASSIGN", "", yyDollar[1].node, yyDollar[3].node)
 		}
-	case 33:
-		yyDollar = yyS[yypt-5 : yypt+1]
-//line spl.y:164
-		{
-			yyVAL.node = NewNode("LOOP", "while", yyDollar[2].node, yyDollar[4].node)
-		}
 	case 34:
-		yyDollar = yyS[yypt-6 : yypt+1]
-//line spl.y:165
-		{
-			yyVAL.node = NewNode("LOOP", "do", yyDollar[3].node, yyDollar[6].node)
-		}
-	case 35:
 		yyDollar = yyS[yypt-5 : yypt+1]
 //line spl.y:169
 		{
-			yyVAL.node = NewNode("BRANCH", "if", yyDollar[2].node, yyDollar[4].node)
+			yyVAL.node = NewNode("LOOP", "while", yyDollar[2].node, yyDollar[4].node)
+		}
+	case 35:
+		yyDollar = yyS[yypt-6 : yypt+1]
+//line spl.y:170
+		{
+			yyVAL.node = NewNode("LOOP", "do", yyDollar[3].node, yyDollar[6].node)
 		}
 	case 36:
+		yyDollar = yyS[yypt-5 : yypt+1]
+//line spl.y:174
+		{
+			yyVAL.node = NewNode("BRANCH", "if", yyDollar[2].node, yyDollar[4].node)
+		}
+	case 37:
 		yyDollar = yyS[yypt-9 : yypt+1]
-//line spl.y:170
+//line spl.y:175
 		{
 			yyVAL.node = NewNode("BRANCH", "ifelse", yyDollar[2].node, yyDollar[4].node, yyDollar[8].node)
 		}
-	case 37:
+	case 38:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:174
+//line spl.y:179
 		{
 			yyVAL.node = NewNode("OUTPUT", "atom", yyDollar[1].node)
 		}
-	case 38:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:175
-		{
-			yyVAL.node = NewNode("OUTPUT", yyDollar[1].Str)
-		}
 	case 39:
-		yyDollar = yyS[yypt-0 : yypt+1]
-//line spl.y:179
-		{
-			yyVAL.node = NewNode("INPUT", "empty")
-		}
-	case 40:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:180
 		{
-			yyVAL.node = NewNode("INPUT", "", yyDollar[1].node)
+			yyVAL.node = NewNode("OUTPUT", yyDollar[1].Str)
+		}
+	case 40:
+		yyDollar = yyS[yypt-0 : yypt+1]
+//line spl.y:184
+		{
+			yyVAL.node = NewNode("INPUT", "empty")
 		}
 	case 41:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:185
+		{
+			yyVAL.node = NewNode("INPUT", "", yyDollar[1].node)
+		}
+	case 42:
 		yyDollar = yyS[yypt-2 : yypt+1]
-//line spl.y:181
+//line spl.y:186
 		{
 			yyVAL.node = NewNode("INPUT", "", yyDollar[1].node, yyDollar[2].node)
 		}
-	case 42:
+	case 43:
 		yyDollar = yyS[yypt-3 : yypt+1]
-//line spl.y:182
+//line spl.y:187
 		{
 			yyVAL.node = NewNode("INPUT", "", yyDollar[1].node, yyDollar[2].node, yyDollar[3].node)
 		}
-	case 43:
+	case 44:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:186
+//line spl.y:191
 		{
 			yyVAL.node = NewNode("TERM", "atom", yyDollar[1].node)
 		}
-	case 44:
+	case 45:
 		yyDollar = yyS[yypt-4 : yypt+1]
-//line spl.y:187
+//line spl.y:192
 		{
 			yyVAL.node = NewNode("TERM", "unop", yyDollar[2].node, yyDollar[3].node)
 		}
-	case 45:
+	case 46:
 		yyDollar = yyS[yypt-5 : yypt+1]
-//line spl.y:188
+//line spl.y:193
 		{
 			yyVAL.node = NewNode("TERM", "binop", yyDollar[2].node, yyDollar[3].node, yyDollar[4].node)
 		}
-	case 46:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:192
-		{
-			yyVAL.node = NewNode("UNOP", yyDollar[1].Str)
-		}
 	case 47:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:193
+//line spl.y:197
 		{
 			yyVAL.node = NewNode("UNOP", yyDollar[1].Str)
 		}
 	case 48:
 		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:197
-		{
-			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
-		}
-	case 49:
-		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:198
 		{
-			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
+			yyVAL.node = NewNode("UNOP", yyDollar[1].Str)
 		}
-	case 50:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:199
-		{
-			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
-		}
-	case 51:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:200
-		{
-			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
-		}
-	case 52:
-		yyDollar = yyS[yypt-1 : yypt+1]
-//line spl.y:201
-		{
-			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
-		}
-	case 53:
+	case 49:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:202
 		{
 			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
 		}
-	case 54:
+	case 50:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:203
 		{
 			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
 		}
-	case 55:
+	case 51:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:204
+		{
+			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
+		}
+	case 52:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:205
+		{
+			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
+		}
+	case 53:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:206
+		{
+			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
+		}
+	case 54:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:207
+		{
+			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
+		}
+	case 55:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:208
+		{
+			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
+		}
+	case 56:
+		yyDollar = yyS[yypt-1 : yypt+1]
+//line spl.y:209
 		{
 			yyVAL.node = NewNode("BINOP", yyDollar[1].Str)
 		}

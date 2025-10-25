@@ -1,9 +1,8 @@
 package lexer
 
 import (
-	"fmt"
-
 	"SPL-compiler/token"
+	"fmt"
 )
 
 // Lexer represents the lexical analyzer
@@ -25,6 +24,11 @@ func New(input string) *Lexer {
 	}
 	l.readChar()
 	return l
+}
+
+func Validate(input string) bool {
+	TokenizeInput(input)
+	return true
 }
 
 // readChar reads the next character and advances position

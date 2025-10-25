@@ -60,7 +60,7 @@ func PrintAST(node *ASTNode, indent int) {
 %token <Str> NEG NOT
 %token <Str> EQ GT OR AND PLUS MINUS MULT DIV
 %token <Str> IDENT NUMBER STRING
-%type <node> spl_prog variables var name procdefs pdef funcdefs fdef body bodyalgo param maxthree mainprog atom algo instr assign loop branch output input term unop binop
+%type <node> spl_prog variables var name procdefs pdef funcdefs fdef body bodyFunc bodyalgo param maxthree mainprog atom algo instr assign loop branch output input term unop binop
 %left OR AND
 %left PLUS MINUS
 %left MULT DIV
@@ -108,11 +108,16 @@ funcdefs
     ;
 
 fdef
-    : name LPAREN param RPAREN LBRACE body RETURN atom RBRACE
+    : name LPAREN param RPAREN LBRACE bodyFunc RETURN atom RBRACE
         { $$ = NewNode("FDEF", "", $1, $3, $6, $8) }
     ;
 
 body
+    : LOCAL LBRACE maxthree RBRACE algo
+        { $$ = NewNode("BODY", "", $3, $5) }
+    ;
+
+bodyFunc
     : LOCAL LBRACE maxthree RBRACE bodyalgo
         { $$ = NewNode("BODY", "", $3, $5) }
     ;

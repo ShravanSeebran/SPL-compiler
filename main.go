@@ -1,203 +1,39 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"strings"
-
 	"SPL-compiler/lexer"
 	"SPL-compiler/parser"
+	"fmt"
+	"os"
 )
 
 func main() {
-	runParserTests()
-}
-
-func runParserTests() {
-	input := `glob { }
-	proc { }
-	func { f(n) { local {a b c} b = n; return b} }
-	main {
-		var {oompie}
-		print poep;
-		while (oompie > 0) {
-			print oompies;
-			oompie = (oompie minus 1);
-			oompie = sit(tannie oupa)
-		};
-		halt
-	}`
-	fmt.Println("Parsing input:\n---\n" + input + "\n---")
-
-	l := lexer.New(input)
-	lexerAdapter := &parser.LexerAdapter{L: l}
-
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Fprintf(os.Stderr, "Compilation failed: %v\n", r)
-			os.Exit(1)
-		}
-	}()
-
-	fmt.Println("Parsing started...")
-	result, err := parser.Parse(lexerAdapter)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Parsing error: %v\n", err)
-		os.Exit(1)
-	}
-
-	if result != nil {
-		fmt.Println("\n--- Abstract Syntax Tree ---")
-		parser.PrintAST(result, 0)
-		fmt.Println("\nParsing completed successfully! ✅")
+	program := readFromFile("spl.txt")
+	if lexer.Validate(program) {
+		fmt.Println("Tokens accepted")
 	} else {
-		fmt.Fprintf(os.Stderr, "Parsing finished, but no AST was generated.\n")
-	}
-	fmt.Println("\nPretty Printed AST:")
-	parser.PrettyPrintASTNode(result, "", true)
-}
-
-func runExamples() {
-	examples := []struct {
-		name  string
-		input string
-	}{
-		{
-			"Basic Program Structure",
-			`glob { 
-				counter 
-				max 
-			} 
-			main { 
-				var { temp } 
-				counter = 0; 
-				max = 10; 
-				halt 
-			}`,
-		},
-		{
-			"Function Definition",
-			`func { 
-				add(x y) { 
-					local { result } 
-					result = (x plus y); 
-					return result 
-				} 
-			}`,
-		},
-		{
-			"Control Flow",
-			`if (x > 0) { 
-				print "positive" 
-			} else { 
-				print "zero or negative" 
-			}`,
-		},
-		{
-			"Loop Example",
-			`while (counter > 0) { 
-				print counter; 
-				counter = (counter minus 1); 
-			}`,
-		},
-		{
-			"Complete Small Program",
-			`glob { x y }
-			proc {
-				printsum(a b) {
-					local { sum }
-					sum = (a plus b);
-					print sum;
-				}
-			}
-			main {
-				var { result }
-				x = 5;
-				y = 3;
-				printsum(x y);
-				halt
-			}`,
-		},
+		// TODO: Better error handling
+		fmt.Println("Lexical error:")
 	}
 
-	for i, example := range examples {
-		fmt.Printf("\n=== Example %d: %s ===\n", i+1, example.name)
-		fmt.Printf("Input:\n%s\n\n", example.input)
-		tokenizeAndPrint(example.input)
-		fmt.Println("\n" + strings.Repeat("-", 60))
+	if err := parser.Validate(program); err != nil {
+		fmt.Println("Syntax error:", err)
+	} else {
+		fmt.Println("Syntax accepted")
 	}
 }
 
-func runFromFile(filename string) {
+func readFromFile(filename string) string {
 	content, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Printf("Error reading file: %v\n", err)
-		return
 	}
-
-	fmt.Printf("Tokenizing file: %s\n", filename)
-	fmt.Printf("Content:\n%s\n\n", string(content))
-	tokenizeAndPrint(string(content))
+	return string(content)
 }
 
-func tokenizeAndPrint(input string) {
-	tokens := lexer.TokenizeInput(input)
-
-	fmt.Println("Tokens:")
-	fmt.Println("-------")
-
-	for i, token := range tokens {
-		if token.Type == lexer.EOF {
-			fmt.Printf("%3d: %-12s %-15s (Line: %d, Col: %d)\n",
-				i+1, "EOF", "EOF", token.Line, token.Column)
-			break
-		}
-
-		// Color coding for different token types (if terminal supports it)
-		typeStr := colorizeTokenType(string(token.Type))
-		literal := token.Literal
-		if token.Type == lexer.STRING {
-			literal = fmt.Sprintf("\"%s\"", literal)
-		}
-
-		fmt.Printf("%3d: %-12s %-15s (Line: %d, Col: %d)\n",
-			i+1, typeStr, literal, token.Line, token.Column)
+func writeToFile(filename string, content string) {
+	err := os.WriteFile(filename, []byte(content), 0644)
+	if err != nil {
+		fmt.Printf("Error writing file: %v\n", err)
 	}
-
-	// Print summary
-	validTokens := len(tokens) - 1 // Exclude EOF
-	fmt.Printf("\nSummary: %d tokens processed\n", validTokens)
-}
-
-// Simple color coding for terminal output (optional)
-func colorizeTokenType(tokenType string) string {
-	// ANSI color codes (may not work in all terminals)
-	switch tokenType {
-	case "IDENT":
-		return "\033[36m" + tokenType + "\033[0m" // Cyan
-	case "INT":
-		return "\033[33m" + tokenType + "\033[0m" // Yellow
-	case "STRING":
-		return "\033[32m" + tokenType + "\033[0m" // Green
-	default:
-		if isKeyword(tokenType) {
-			return "\033[35m" + tokenType + "\033[0m" // Magenta
-		}
-		return tokenType
-	}
-}
-
-func isKeyword(tokenType string) bool {
-	keywords := []string{
-		"glob", "proc", "func", "main", "var", "local", "return",
-		"halt", "print", "while", "do", "until", "if", "else", "eq", "or", "and",
-		"plus", "minus", "mult", "div", "neg", "not",
-	}
-
-	for _, keyword := range keywords {
-		if tokenType == keyword {
-			return true
-		}
-	}
-	return false
 }

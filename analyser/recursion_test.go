@@ -1,10 +1,9 @@
 package analyser
 
 import (
+	"SPL-compiler/parser"
 	"fmt"
 	"testing"
-
-	"SPL-compiler/parser"
 )
 
 func TestRecursion(t *testing.T) {
@@ -32,7 +31,7 @@ main {
 	for _, tt := range tests {
 		fmt.Println("\n-------------- ", tt.name, " --------------")
 		fmt.Println(tt.input)
-		ast := generateAST(tt.input)
+		ast := parser.GenerateAST(tt.input)
 		testRecursion(ast)
 	}
 }

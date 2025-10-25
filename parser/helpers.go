@@ -1,8 +1,41 @@
 package parser
 
 import (
+	"SPL-compiler/lexer"
+	"errors"
 	"fmt"
+	"os"
 )
+
+func Validate(input string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			// TODO: Better error handling
+			err = errors.New("syntax error")
+		}
+	}()
+
+	GenerateAST(input)
+	return nil
+}
+
+func GenerateAST(input string) *ASTNode {
+	l := lexer.New(input)
+	lexerAdapter := &LexerAdapter{L: l}
+	result, err := Parse(lexerAdapter)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Parsing error: %v\n", err)
+		os.Exit(1)
+	}
+
+	if result != nil {
+		fmt.Println("Parsing finished, AST generated.")
+	} else {
+		fmt.Fprintf(os.Stderr, "Parsing finished, but no AST was generated.\n")
+	}
+
+	return ResultAST
+}
 
 func PrettyPrintASTNode(n *ASTNode, prefix string, isTail bool) {
 	if n == nil {
@@ -38,6 +71,20 @@ func GetNodeByID(node *ASTNode, id int) *ASTNode {
 	}
 	for _, child := range node.Children {
 		if result := GetNodeByID(child, id); result != nil {
+			return result
+		}
+	}
+	return nil
+}
+
+func GetDefNodeByNameID(node *ASTNode, id int) *ASTNode {
+	for _, child := range node.Children {
+		if int(child.ID) == id {
+			return node
+		}
+	}
+	for _, child := range node.Children {
+		if result := GetDefNodeByNameID(child, id); result != nil {
 			return result
 		}
 	}

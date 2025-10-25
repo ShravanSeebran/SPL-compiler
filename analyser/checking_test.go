@@ -1,11 +1,8 @@
 package analyser
 
 import (
-	"fmt"
-	"os"
-
-	"SPL-compiler/lexer"
 	"SPL-compiler/parser"
+	"fmt"
 )
 
 // func TestChecker(t *testing.T) {
@@ -41,24 +38,6 @@ import (
 //
 // 	}
 // }
-
-func generateAST(input string) *parser.ASTNode {
-	l := lexer.New(input)
-	lexerAdapter := &parser.LexerAdapter{L: l}
-	result, err := parser.Parse(lexerAdapter)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Parsing error: %v\n", err)
-		os.Exit(1)
-	}
-
-	if result != nil {
-		fmt.Println("Parsing finished, AST generated.")
-	} else {
-		fmt.Fprintf(os.Stderr, "Parsing finished, but no AST was generated.\n")
-	}
-
-	return parser.ResultAST
-}
 
 func testChecker(ast *parser.ASTNode) {
 	AnalyseProgram(ast)

@@ -1,10 +1,8 @@
 package analyser
 
 import (
-	"fmt"
-	"strings"
-
 	"SPL-compiler/parser"
+	"fmt"
 )
 
 var (
@@ -84,18 +82,17 @@ func generateInstr(node *parser.ASTNode) []string {
 	case "print":
 		return []string{fmt.Sprintf("PRINT %s", getOutput(node.Children[0]))}
 	case "call":
-		fname := symbolTable[int(node.Children[0].ID)].uniqueID
-		code, places := generateInput(node.Children[1])
-		return append(code, fmt.Sprintf("CALL %s(%s)", fname, strings.Join(places, " ")))
-		// procNodeID := symbolTable[int(node.Children[0].ID)].declarationNode
-		// procNode := parser.GetNodeByID(procNodeID)
-		// inlineCode, places, := inlineProc(procNode)
-		// outptut := make([]string, 0)
-		// for i, param := range node.Children[1].Children {
-		// 	outptut = append(outptut, fmt.Sprintf("%s = %s", places[i], getAtom(param)))
-		// }
-		// outptut = append(outptut, inlineCode...)
-		// return output
+		code, argPlaces := generateInput(node.Children[1])
+		procNodeID := symbolTable[int(node.Children[0].ID)].declarationNode
+		procNode := parser.GetDefNodeByNameID(rootNode, procNodeID)
+		inlineCode := inlineProc(procNode)
+		output := make([]string, 0)
+		output = append(output, code...)
+		for i, param := range procNode.Children[1].Children[0].Children {
+			output = append(output, fmt.Sprintf("%s = %s", getVar(param), argPlaces[i]))
+		}
+		output = append(output, inlineCode...)
+		return output
 	default:
 		return generateCode(node.Children[0])
 	}
@@ -121,6 +118,21 @@ func generateInput(node *parser.ASTNode) ([]string, []string) {
 	return assignments, places
 }
 
+func inlineProc(node *parser.ASTNode) []string {
+	if node.Type != "PDEF" {
+		panic(fmt.Sprintf("expected 'pdef' Proc node name but got %s", node.Type))
+	}
+	return generateAlgo(node.Children[2].Children[1])
+}
+
+func inlineFunc(node *parser.ASTNode, place string) []string {
+	if node.Type != "FDEF" {
+		panic(fmt.Sprintf("expected 'fdef' Func node name but got %s", node.Type))
+	}
+	algo := generateAlgo(node.Children[2].Children[1])
+	return append(algo, fmt.Sprintf("%s = %s", place, getAtom(node.Children[3])))
+}
+
 func getAtom(node *parser.ASTNode) string {
 	if len(node.Children) > 0 {
 		return getVar(node.Children[0])
@@ -137,12 +149,21 @@ func generateAssign(node *parser.ASTNode) []string {
 	if node.Name == "call" {
 		place := newPlace()
 		vname := symbolTable[int(node.Children[0].ID)].uniqueID
-		fname := symbolTable[int(node.Children[1].ID)].uniqueID
-		code, places := generateInput(node.Children[2])
+		// fname := symbolTable[int(node.Children[1].ID)].uniqueID
+		code, argPlaces := generateInput(node.Children[2])
+		funcNodeID := symbolTable[int(node.Children[1].ID)].declarationNode
+		funcNode := parser.GetDefNodeByNameID(rootNode, funcNodeID)
+		inlineCode := inlineFunc(funcNode, place)
+		output := make([]string, 0)
+		output = append(output, code...)
+		for i, param := range funcNode.Children[1].Children[0].Children {
+			output = append(output, fmt.Sprintf("%s = %s", getVar(param), argPlaces[i]))
+		}
+		output = append(output, inlineCode...)
 
 		return append(
-			code,
-			fmt.Sprintf("%s = CALL %s(%s)", place, fname, strings.Join(places, " ")),
+			output,
+			// fmt.Sprintf("%s = CALL %s(%s)", place, fname, strings.Join(places, " ")),
 			fmt.Sprintf("%s = %s", vname, place),
 		)
 
