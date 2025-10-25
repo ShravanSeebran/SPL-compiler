@@ -1,8 +1,9 @@
 package lexer
 
 import (
-	"SPL-compiler/token"
 	"fmt"
+
+	"SPL-compiler/token"
 )
 
 // Lexer represents the lexical analyzer
@@ -245,6 +246,89 @@ func PrintTokens(tokens []Token) {
 	for i, tok := range tokens {
 		fmt.Printf("%d: Type: %-10s Literal: %-10s Line: %d Column: %d\n",
 			i+1, tok.Type, tok.Literal, tok.Line, tok.Column)
+	}
+}
+
+func PrintTokensInline(tokens []Token) {
+	for _, tok := range tokens {
+		fmt.Printf("%s ", tokenToTypeString(tok.Type))
+	}
+}
+
+func tokenToTypeString(t token.TokenType) string {
+	switch t {
+	case token.ILLEGAL:
+		return "ILLEGAL"
+	case token.EOF:
+		return "EOF"
+	case token.IDENT:
+		return "IDENT"
+	case token.INT:
+		return "INT"
+	case token.STRING:
+		return "STRING"
+	case token.ASSIGN:
+		return "ASSIGN"
+	case token.EQ:
+		return "EQ"
+	case token.GT:
+		return "GT"
+	case token.OR:
+		return "OR"
+	case token.AND:
+		return "AND"
+	case token.PLUS:
+		return "PLUS"
+	case token.MINUS:
+		return "MINUS"
+	case token.MULT:
+		return "MULT"
+	case token.DIV:
+		return "DIV"
+	case token.NEG:
+		return "NEG"
+	case token.NOT:
+		return "NOT"
+	case token.SEMICOLON:
+		return "SEMICOLON"
+	case token.LPAREN:
+		return "LPAREN"
+	case token.RPAREN:
+		return "RPAREN"
+	case token.LBRACE:
+		return "LBRACE"
+	case token.RBRACE:
+		return "RBRACE"
+	case token.GLOB:
+		return "GLOB"
+	case token.PROC:
+		return "PROC"
+	case token.FUNC:
+		return "FUNC"
+	case token.MAIN:
+		return "MAIN"
+	case token.VAR:
+		return "VAR"
+	case token.LOCAL:
+		return "LOCAL"
+	case token.RETURN:
+		return "RETURN"
+	case token.HALT:
+		return "HALT"
+	case token.PRINT:
+		return "PRINT"
+	case token.WHILE:
+		return "WHILE"
+	case token.DO:
+		return "DO"
+	case token.UNTIL:
+		return "UNTIL"
+	case token.IF:
+		return "IF"
+	case token.ELSE:
+		return "ELSE"
+	default:
+		return "UNKNOWN"
 	}
 }
 
