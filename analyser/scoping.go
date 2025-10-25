@@ -1,8 +1,9 @@
 package analyser
 
 import (
-	"SPL-compiler/parser"
 	"fmt"
+
+	"SPL-compiler/parser"
 )
 
 var (
@@ -102,12 +103,11 @@ func handleProgram(node *parser.ASTNode) {
 }
 
 func handleVariables(node *parser.ASTNode) {
-	if len(node.Children) > 0 {
-		declareVar(node.Children[0])
-		visitNode(node.Children[1])
-	} else {
+	if len(node.Children) == 0 {
 		return
 	}
+	declareVar(node.Children[0])
+	visitNode(node.Children[1])
 }
 
 func handleProcDefs(node *parser.ASTNode) {
@@ -279,6 +279,9 @@ func handleInstr(node *parser.ASTNode) {
 }
 
 func handleOutput(node *parser.ASTNode) {
+	if len(node.Children) == 0 {
+		return
+	}
 	visitNode(node.Children[0])
 }
 

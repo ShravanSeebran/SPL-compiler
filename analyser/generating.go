@@ -1,9 +1,10 @@
 package analyser
 
 import (
-	"SPL-compiler/parser"
 	"fmt"
 	"strings"
+
+	"SPL-compiler/parser"
 )
 
 var (
@@ -16,9 +17,9 @@ func initialiseGenerator() {
 	labelIndex = 0
 }
 
-func GenerateProgram(root *parser.ASTNode) {
+func GenerateProgram(root *parser.ASTNode) []string {
 	initialiseGenerator()
-	checkNode(root)
+	return generateCode(root)
 }
 
 func newPlace() string {
@@ -41,48 +42,20 @@ func generateCode(node *parser.ASTNode) []string {
 	switch node.Type {
 	case SPL_PROG:
 		return generateProgram(node)
-	// case PROCDEFS:
-	// 	return generateProcDefs(node)
-	// case PDEF:
-	// 	return generatePDef(node)
-	// case FUNCDEFS:
-	// 	return generateFuncDefs(node)
-	// case FDEF:
-	// 	return generateFDef(node)
-	// case VAR:
-	// 	return generateVar(node)
-	// case NAME:
-	// 	return generateName(node)
-	// case BODY:
-	// 	return generateBody(node)
-	// case PARAM:
-	// 	return generateParam(node)
-	// case MAXTHREE:
-	// 	return generateMaxThree(node)
-	// case MAINPROG:
-	// 	return generateMainProg(node)
-	// case ATOM:
-	// 	return generateAtom(node)
-	// case ALGO:
-	// 	return generateAlgo(node)
-	// case INSTR:
-	// 	return generateInstr(node)
-	// case ASSIGN:
-	// 	return generateAssign(node)
-	// case LOOP:
-	// 	return generateLoop(node)
-	// case BRANCH:
-	// 	return generateBranch(node)
-	// case OUTPUT:
-	// 	return generateOutput(node)
-	// case INPUT:
-	// 	return generateInput(node)
+	case MAINPROG:
+		return generateMainProg(node)
+	case ALGO:
+		return generateAlgo(node)
+	case INSTR:
+		return generateInstr(node)
+	case ASSIGN:
+		return generateAssign(node)
+	case LOOP:
+		return generateLoop(node)
+	case BRANCH:
+		return generateBranch(node)
 	// case TERM:
 	// 	return generateTerm(node)
-	// case UNOP:
-	// 	return generateUnOp(node)
-	// case BINOP:
-	// 	return generateBinOp(node)
 	default:
 		panic("ungenerateed-node-type: " + node.Type)
 	}
@@ -122,7 +95,7 @@ func getOutput(node *parser.ASTNode) string {
 	if node.Name == "atom" {
 		return getAtom(node.Children[0])
 	} else {
-		return node.Name
+		return fmt.Sprintf(`"%s"`, node.Name)
 	}
 }
 
@@ -217,6 +190,7 @@ func generateLoop(node *parser.ASTNode) []string {
 		)
 		return append(
 			part1,
+			fmt.Sprintf("GOTO %s", labelStart),
 			fmt.Sprintf("REM %s", labelExit),
 		)
 
@@ -226,7 +200,8 @@ func generateLoop(node *parser.ASTNode) []string {
 }
 
 func generateBranch(node *parser.ASTNode) []string {
-	if node.Name == "if" {
+	switch node.Name {
+	case "if":
 		l0 := newLabel()
 		l1 := newLabel()
 		t0 := newPlace()
@@ -245,7 +220,7 @@ func generateBranch(node *parser.ASTNode) []string {
 			part2,
 			fmt.Sprintf("REM %s", l1),
 		)
-	} else if node.Name == "ifelse" {
+	case "ifelse":
 		l0 := newLabel()
 		l1 := newLabel()
 		t0 := newPlace()
@@ -271,49 +246,102 @@ func generateBranch(node *parser.ASTNode) []string {
 			part3,
 			fmt.Sprintf("REM %s", l1),
 		)
-	} else {
+	default:
 		panic("expected 'if' or 'ifelse' Branch node name")
 	}
 }
 
-func generateTerm(node *parser.ASTNode, place string) []string {
-	// if node.Name == "atom" {
-	// } else if node.Name == "unop" {
-	// } else if node.Name == "binop" {
-	// } else {
-	// 	panic("expected 'atom', 'unop', or 'binop' Term node name")
-	// }
-	return []string{}
-}
-
-func generateUnOp(node *parser.ASTNode) string {
-	if node.Name == "neg" {
-		return "numeric"
-	} else if node.Name == "not" {
-		return "boolean"
-	} else {
-		panic("expected 'neg' or 'not' UnOp node name")
+func generateCond(node *parser.ASTNode, labelT, labelF string) []string {
+	switch node.Name {
+	case "unop":
+		if node.Children[0].Name != "not" {
+			panic("expected 'not' UnOp in Cond node")
+		}
+		return generateCond(node.Children[1], labelF, labelT)
+	case "binop":
+		op := node.Children[1].Name
+		switch op {
+		case "and":
+			arg2 := newLabel()
+			codeL := generateCond(node.Children[0], arg2, labelF)
+			codeR := generateCond(node.Children[2], labelT, labelF)
+			part0 := append(codeL, fmt.Sprintf("REM %s", arg2))
+			return append(part0, codeR...)
+		case "or":
+			arg2 := newLabel()
+			codeL := generateCond(node.Children[0], labelT, arg2)
+			codeR := generateCond(node.Children[2], labelT, labelF)
+			part0 := append(codeL, fmt.Sprintf("REM %s", arg2))
+			return append(part0, codeR...)
+		}
+		t1 := newPlace()
+		t2 := newPlace()
+		codeL := generateTerm(node.Children[0], t1)
+		binop := getBinOp(node.Children[1])
+		codeR := generateTerm(node.Children[2], t2)
+		part0 := append(codeL, codeR...)
+		part1 := append(
+			part0,
+			fmt.Sprintf("IF %s %s %s THEN %s", t1, binop, t2, labelT),
+			fmt.Sprintf("GOTO %s", labelF),
+		)
+		return part1
+	default:
+		panic("expected 'unop' or 'binop' Cond node name")
 	}
 }
 
-func generateBinOp(node *parser.ASTNode) string {
-	if node.Name == "eq" {
-		return "comparison"
-	} else if node.Name == ">" {
-		return "comparison"
-	} else if node.Name == "or" {
-		return "boolean"
-	} else if node.Name == "and" {
-		return "boolean"
-	} else if node.Name == "plus" {
-		return "numeric"
-	} else if node.Name == "minus" {
-		return "numeric"
-	} else if node.Name == "mult" {
-		return "numeric"
-	} else if node.Name == "div" {
-		return "numeric"
-	} else {
-		panic("expected 'eq', '>', 'or', 'and', 'plus', 'minus', 'mult', or 'div' BinOp node name")
+func generateTerm(node *parser.ASTNode, place string) []string {
+	switch node.Name {
+	case "atom":
+		atom := getAtom(node.Children[0])
+		return []string{fmt.Sprintf("%s = %s", place, atom)}
+	case "unop":
+		if node.Children[0].Name != "neg" {
+			panic("expected 'neg' UnOp in Term node")
+		}
+		t0 := newPlace()
+		unop := getUnOp(node.Children[0])
+		code := generateTerm(node.Children[1], t0)
+		return append(code, fmt.Sprintf("%s = %s%s", place, unop, t0))
+	case "binop":
+		if node.Children[1].Name == "and" || node.Children[1].Name == "or" {
+			panic("expected non-boolean BinOp in Term node")
+		}
+		t0 := newPlace()
+		t1 := newPlace()
+		codeL := generateTerm(node.Children[0], t0)
+		binop := getBinOp(node.Children[1])
+		codeR := generateTerm(node.Children[2], t1)
+		part0 := append(codeL, codeR...)
+		return append(part0, fmt.Sprintf("%s = %s %s %s", place, t0, binop, t1))
+	default:
+		panic("expected 'atom', 'unop', or 'binop' Term node name")
+	}
+}
+
+func getUnOp(node *parser.ASTNode) string {
+	if node.Name == "neg" {
+		return "-"
+	}
+	panic("expected 'neg' UnOp node name")
+}
+
+func getBinOp(node *parser.ASTNode) string {
+	switch node.Name {
+	case "eq":
+		return "="
+	case ">":
+		return ">"
+	case "plus":
+		return "+"
+	case "minus":
+		return "-"
+	case "mult":
+		return "*"
+	case "div":
+		return "/"
+	default:
+		panic("expected 'eq', '>', 'plus', 'minus', 'mult', or 'div' BinOp node name")
 	}
 }
