@@ -132,8 +132,8 @@ mainprog
     ;
 
 atom
-    : var { $$ = $1 }
-    | NUMBER { $$ = NewNode("Number", $1) }
+    : var { $$ = NewNode("ATOM", "Var", $1) }
+    | NUMBER { $$ = NewNode("ATOM", $1) }
     ;
 
 algo 

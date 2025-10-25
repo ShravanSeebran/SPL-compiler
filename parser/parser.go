@@ -11,10 +11,12 @@ import (
 	"sync/atomic"
 )
 
-//line spl.y:3
+//line spl.y:2
 
-var ResultAST *ASTNode
-var nodeCounter int64
+var (
+	ResultAST   *ASTNode
+	nodeCounter int64
+)
 
 func nextID() int64 {
 	return atomic.AddInt64(&nodeCounter, 1)
@@ -55,39 +57,41 @@ type yySymType struct {
 	node *ASTNode
 }
 
-const GLOB = 57346
-const PROC = 57347
-const FUNC = 57348
-const MAIN = 57349
-const LOCAL = 57350
-const VAR = 57351
-const RETURN = 57352
-const HALT = 57353
-const PRINT = 57354
-const WHILE = 57355
-const DO = 57356
-const UNTIL = 57357
-const IF = 57358
-const ELSE = 57359
-const SEMICOLON = 57360
-const LPAREN = 57361
-const RPAREN = 57362
-const LBRACE = 57363
-const RBRACE = 57364
-const ASSIGN = 57365
-const NEG = 57366
-const NOT = 57367
-const EQ = 57368
-const GT = 57369
-const OR = 57370
-const AND = 57371
-const PLUS = 57372
-const MINUS = 57373
-const MULT = 57374
-const DIV = 57375
-const IDENT = 57376
-const NUMBER = 57377
-const STRING = 57378
+const (
+	GLOB      = 57346
+	PROC      = 57347
+	FUNC      = 57348
+	MAIN      = 57349
+	LOCAL     = 57350
+	VAR       = 57351
+	RETURN    = 57352
+	HALT      = 57353
+	PRINT     = 57354
+	WHILE     = 57355
+	DO        = 57356
+	UNTIL     = 57357
+	IF        = 57358
+	ELSE      = 57359
+	SEMICOLON = 57360
+	LPAREN    = 57361
+	RPAREN    = 57362
+	LBRACE    = 57363
+	RBRACE    = 57364
+	ASSIGN    = 57365
+	NEG       = 57366
+	NOT       = 57367
+	EQ        = 57368
+	GT        = 57369
+	OR        = 57370
+	AND       = 57371
+	PLUS      = 57372
+	MINUS     = 57373
+	MULT      = 57374
+	DIV       = 57375
+	IDENT     = 57376
+	NUMBER    = 57377
+	STRING    = 57378
+)
 
 var yyToknames = [...]string{
 	"$end",
@@ -130,9 +134,11 @@ var yyToknames = [...]string{
 
 var yyStatenames = [...]string{}
 
-const yyEofCode = 1
-const yyErrCode = 2
-const yyInitialStackSize = 16
+const (
+	yyEofCode          = 1
+	yyErrCode          = 2
+	yyInitialStackSize = 16
+)
 
 //line spl.y:202
 
@@ -719,13 +725,13 @@ yydefault:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:135
 		{
-			yyVAL.node = yyDollar[1].node
+			yyVAL.node = NewNode("ATOM", "Var", yyDollar[1].node)
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
 //line spl.y:136
 		{
-			yyVAL.node = NewNode("Number", yyDollar[1].Str)
+			yyVAL.node = NewNode("ATOM", yyDollar[1].Str)
 		}
 	case 21:
 		yyDollar = yyS[yypt-2 : yypt+1]
