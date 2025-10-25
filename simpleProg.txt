@@ -1,0 +1,25 @@
+glob { x y}
+proc {
+  countdown(n) {
+    local { }
+    while (n > 0) {
+      print n;
+      n = (n minus 1)
+    }
+  }
+}
+func {
+  sum(a b) {
+    local { outp }
+    outp = (a plus b);
+    return outp
+  }
+}
+main {
+  var { result }
+  x = 5;
+  y = 10;
+  result = sum(x y); 
+  countdown(result);
+  print "Done"
+}

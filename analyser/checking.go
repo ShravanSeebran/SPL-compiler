@@ -4,6 +4,17 @@ import (
 	"SPL-compiler/parser"
 )
 
+func ValidateTypeChecking(root *parser.ASTNode) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+
+	TypeCheckProgram(root)
+	return nil
+}
+
 func TypeCheckProgram(root *parser.ASTNode) {
 	checkNode(root)
 }

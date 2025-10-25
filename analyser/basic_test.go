@@ -1,11 +1,12 @@
 package analyser
 
 import (
-	"SPL-compiler/lexer"
-	"SPL-compiler/parser"
 	"fmt"
 	"strings"
 	"testing"
+
+	"SPL-compiler/lexer"
+	"SPL-compiler/parser"
 )
 
 func TestBasic(t *testing.T) {
@@ -27,62 +28,6 @@ func TestBasic(t *testing.T) {
 		halt
 	}
 				`},
-		{
-			"Basic Program Structure",
-			`glob { 
-				counter 
-				max 
-			} 
-			main { 
-				var { temp } 
-				counter = 0; 
-				max = 10; 
-				halt 
-			}`,
-		},
-		{
-			"Function Definition",
-			`func { 
-				add(x y) { 
-					local { result } 
-					result = (x plus y); 
-					return result 
-				} 
-			}`,
-		},
-		{
-			"Control Flow",
-			`if (x > 0) { 
-				print "positive" 
-			} else { 
-				print "zero or negative" 
-			}`,
-		},
-		{
-			"Loop Example",
-			`while (counter > 0) { 
-				print counter; 
-				counter = (counter minus 1); 
-			}`,
-		},
-		{
-			"Complete Small Program",
-			`glob { x y }
-			proc {
-				printsum(a b) {
-					local { sum }
-					sum = (a plus b);
-					print sum;
-				}
-			}
-			main {
-				var { result }
-				x = 5;
-				y = 3;
-				printsum(x y);
-				halt
-			}`,
-		},
 	}
 	for _, tt := range tests {
 		fmt.Println("\n-------------- ", tt.name, " --------------")

@@ -1,0 +1,23 @@
+if ((a > 0) and (b > 0)) {
+  print "if"
+} else {
+  print "else"
+}
+
+term a stuff...
+term 0 stuff...
+IF a > 0 THEN arg2
+ << else code >>
+GOTO lExit
+
+REM arg2
+
+term b stuff...
+term 0 stuff...
+IF b > 0 THEN lStart
+ << else code >>
+GOTO lExit
+
+REM lStart
+ << if code >>
+REM lExit

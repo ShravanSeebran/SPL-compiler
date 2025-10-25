@@ -1,0 +1,41 @@
+glob { a b }
+proc { }
+func {
+  gcd(a b) {
+    local { outp }
+    if ((0 > a) or (0 > b)) {
+      print "EN";
+      halt
+    } else {
+      if ((a eq 0) and (b eq 0)) {
+        print "Error: GCD(0,0) is undefined";
+        halt
+      } else {
+        if (a eq 0) {
+          outp = b
+        } else {
+          if (b eq 0) {
+            outp = a
+          } else {
+            while ((b > a) or (a > b)) {
+              if (b > a) {
+                b = b minus a
+              } else {
+                a = a minus b
+              }
+            };
+            outp = a
+          }
+        }
+      }
+    };
+    return outp
+  }
+}
+main {
+  var { b c }
+  a = 24;
+  b = 3;
+  c = gcd(a b);
+  print c
+}

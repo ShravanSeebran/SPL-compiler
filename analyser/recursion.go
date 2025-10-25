@@ -8,6 +8,17 @@ import (
 
 var rootNode *parser.ASTNode
 
+func ValidateNoRecursion(root *parser.ASTNode) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+
+	CheckRecursion(root)
+	return nil
+}
+
 func CheckRecursion(root *parser.ASTNode) {
 	rootNode = root
 	procdefs := root.Children[1]

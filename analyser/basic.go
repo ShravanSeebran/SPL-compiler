@@ -5,6 +5,17 @@ import (
 	"strings"
 )
 
+func ValidateTranslateToBasic(program []string) (instrs []string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+
+	TranslateToBasic(program)
+	return program, nil
+}
+
 func TranslateToBasic(program []string) {
 	labelMap := getLabel(program)
 	addLineNumbers(labelMap, program)

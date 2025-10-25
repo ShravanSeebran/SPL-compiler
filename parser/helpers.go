@@ -1,13 +1,14 @@
 package parser
 
 import (
-	"SPL-compiler/lexer"
 	"errors"
 	"fmt"
 	"os"
+
+	"SPL-compiler/lexer"
 )
 
-func Validate(input string) (err error) {
+func Validate(input string) (root *ASTNode, err error) {
 	defer func() {
 		if r := recover(); r != nil {
 			// TODO: Better error handling
@@ -15,8 +16,8 @@ func Validate(input string) (err error) {
 		}
 	}()
 
-	GenerateAST(input)
-	return nil
+	root = GenerateAST(input)
+	return root, nil
 }
 
 func GenerateAST(input string) *ASTNode {

@@ -1,8 +1,9 @@
 package analyser
 
 import (
-	"SPL-compiler/parser"
 	"fmt"
+
+	"SPL-compiler/parser"
 )
 
 var (
@@ -13,6 +14,17 @@ var (
 func initialiseGenerator() {
 	placeIndex = 0
 	labelIndex = 0
+}
+
+func ValidateCodeGeneration(root *parser.ASTNode) (intrs []string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+
+	instrs := GenerateProgram(root)
+	return instrs, nil
 }
 
 func GenerateProgram(root *parser.ASTNode) []string {
@@ -177,20 +189,18 @@ func generateAssign(node *parser.ASTNode) []string {
 
 func generateLoop(node *parser.ASTNode) []string {
 	// NOTE: Check for implicit GOTOS
-	if node.Name == "while" {
+	switch node.Name {
+	case "while":
 		labelCond := newLabel()
 		labelStart := newLabel()
 		labelExit := newLabel()
-		t0 := newPlace()
-		cond := generateTerm(node.Children[0], t0)
+		cond := generateCond(node.Children[0], labelStart, labelExit)
 		algo := generateAlgo(node.Children[1])
 		part0 := append([]string{
 			fmt.Sprintf("REM %s", labelCond),
 		}, cond...)
 		part1 := append(
 			part0,
-			fmt.Sprintf("IF %s THEN %s", t0, labelStart),
-			fmt.Sprintf("GOTO %s", labelExit),
 			fmt.Sprintf("REM %s", labelStart),
 		)
 		part2 := append(
@@ -202,16 +212,12 @@ func generateLoop(node *parser.ASTNode) []string {
 			fmt.Sprintf("GOTO %s", labelCond),
 			fmt.Sprintf("REM %s", labelExit))
 
-		// NOTE: Stopped here
-	} else if node.Name == "do" {
+	// NOTE: Stopped here
+	case "do":
 		labelStart := newLabel()
 		labelExit := newLabel()
 		algo := generateAlgo(node.Children[0])
-		t0 := newPlace()
-		cond := append(
-			generateTerm(node.Children[1], t0),
-			fmt.Sprintf("IF %s THEN %s", t0, labelExit),
-		)
+		cond := generateCond(node.Children[1], labelExit, labelStart)
 		part0 := append([]string{
 			fmt.Sprintf("REM %s", labelStart),
 		}, algo...)
@@ -221,11 +227,10 @@ func generateLoop(node *parser.ASTNode) []string {
 		)
 		return append(
 			part1,
-			fmt.Sprintf("GOTO %s", labelStart),
 			fmt.Sprintf("REM %s", labelExit),
 		)
 
-	} else {
+	default:
 		panic("expected 'while' or 'do' Loop node name")
 	}
 }
@@ -233,15 +238,12 @@ func generateLoop(node *parser.ASTNode) []string {
 func generateBranch(node *parser.ASTNode) []string {
 	switch node.Name {
 	case "if":
-		l0 := newLabel()
-		l1 := newLabel()
-		t0 := newPlace()
-		cond := generateTerm(node.Children[0], t0)
+		labelStart := newLabel()
+		labelExit := newLabel()
+		cond := generateCond(node.Children[0], labelStart, labelExit)
 		part1 := append(
 			cond,
-			fmt.Sprintf("IF %s THEN %s", t0, l0),
-			fmt.Sprintf("GOTO %s", l1),
-			fmt.Sprintf("REM %s", l0),
+			fmt.Sprintf("REM %s", labelStart),
 		)
 		part2 := append(
 			part1,
@@ -249,34 +251,27 @@ func generateBranch(node *parser.ASTNode) []string {
 		)
 		return append(
 			part2,
-			fmt.Sprintf("REM %s", l1),
+			fmt.Sprintf("REM %s", labelExit),
 		)
 	case "ifelse":
-		l0 := newLabel()
-		l1 := newLabel()
-		t0 := newPlace()
-		cond := generateTerm(node.Children[0], t0)
-		part0 := append(
-			cond,
-			fmt.Sprintf("IF %s THEN %s", t0, l0),
-		)
+		labelStart := newLabel()
+		labelExit := newLabel()
+		ifAlgo := generateAlgo(node.Children[1])
+		elseAlgo := generateAlgo(node.Children[2])
+		cond := generateCondElse(node.Children[0], labelStart, labelExit, elseAlgo)
 		part1 := append(
-			part0,
-			generateAlgo(node.Children[2])...,
+			cond,
+			fmt.Sprintf("REM %s", labelStart),
 		)
 		part2 := append(
 			part1,
-			fmt.Sprintf("GOTO %s", l1),
-			fmt.Sprintf("REM %s", l0),
+			ifAlgo...,
 		)
 		part3 := append(
 			part2,
-			generateAlgo(node.Children[1])...,
+			fmt.Sprintf("REM %s", labelExit),
 		)
-		return append(
-			part3,
-			fmt.Sprintf("REM %s", l1),
-		)
+		return part3
 	default:
 		panic("expected 'if' or 'ifelse' Branch node name")
 	}
@@ -317,6 +312,60 @@ func generateCond(node *parser.ASTNode, labelT, labelF string) []string {
 			fmt.Sprintf("GOTO %s", labelF),
 		)
 		return part1
+	default:
+		panic("expected 'unop' or 'binop' Cond node name")
+	}
+}
+
+func generateCondElse(node *parser.ASTNode, labelT, labelF string, elseInstrs []string) []string {
+	switch node.Name {
+	case "unop":
+		if node.Children[0].Name != "not" {
+			panic("expected 'not' UnOp in Cond node")
+		}
+		return generateCondElse(node.Children[1], labelF, labelT, elseInstrs)
+	case "binop":
+		op := node.Children[1].Name
+		switch op {
+		case "and":
+			fmt.Println(
+				"Generating 'and' condition with else: labelT =",
+				labelT,
+				"labelF =",
+				labelF,
+			)
+			arg2 := newLabel()
+			codeL := generateCondElse(node.Children[0], arg2, labelF, elseInstrs)
+			codeR := generateCond(node.Children[2], labelT, labelF)
+			part0 := append(codeL, fmt.Sprintf("REM %s", arg2))
+			return append(part0, codeR...)
+		case "or":
+			fmt.Println("Generating 'or' condition with else: labelT =", labelT, "labelF =", labelF)
+			arg2 := newLabel()
+			codeL := generateCond(node.Children[0], labelT, arg2)
+			codeR := generateCondElse(node.Children[2], labelT, labelF, elseInstrs)
+			part0 := append(codeL, fmt.Sprintf("REM %s", arg2))
+			return append(part0, codeR...)
+		}
+		t1 := newPlace()
+		t2 := newPlace()
+		codeL := generateTerm(node.Children[0], t1)
+		binop := getBinOp(node.Children[1])
+		codeR := generateTerm(node.Children[2], t2)
+		part0 := append(codeL, codeR...)
+		part1 := append(
+			part0,
+			fmt.Sprintf("IF %s %s %s THEN %s", t1, binop, t2, labelT),
+		)
+		part2 := append(
+			part1,
+			elseInstrs...,
+		)
+		part3 := append(
+			part2,
+			fmt.Sprintf("GOTO %s", labelF),
+		)
+		return part3
 	default:
 		panic("expected 'unop' or 'binop' Cond node name")
 	}

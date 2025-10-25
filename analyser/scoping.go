@@ -23,6 +23,17 @@ func initialiseAnalyser() {
 	varIndex = 0
 }
 
+func ValidateScoping(root *parser.ASTNode) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("%v", r)
+		}
+	}()
+
+	AnalyseProgram(root)
+	return nil
+}
+
 func AnalyseProgram(root *parser.ASTNode) {
 	initialiseAnalyser()
 	visitNode(root)
