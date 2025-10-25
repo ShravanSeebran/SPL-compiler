@@ -87,14 +87,16 @@ func visitNode(node *parser.ASTNode) {
 
 func handleProgram(node *parser.ASTNode) {
 	// GLOBAL SCOPE
-	currentScope = auxStack.enter(int(node.ID)) // everywhere scope
+	currentScope = auxStack.enter(currentScope) // everywhere scope
+	currentScope = int(node.ID)
 
 	GLOBAL_SCOPE = int(node.Children[0].ID)
 	PROCEDURE_SCOPE = int(node.Children[1].ID)
 	FUNCTION_SCOPE = int(node.Children[2].ID)
 
 	for _, child := range node.Children {
-		currentScope = auxStack.enter(int(child.ID))
+		currentScope = auxStack.enter(currentScope)
+		currentScope = int(child.ID)
 		visitNode(child)
 		currentScope = auxStack.exit()
 	}
@@ -112,17 +114,13 @@ func handleVariables(node *parser.ASTNode) {
 
 func handleProcDefs(node *parser.ASTNode) {
 	for _, child := range node.Children {
-		currentScope = auxStack.enter(int(child.ID))
 		visitNode(child)
-		currentScope = auxStack.exit()
 	}
 }
 
 func handleFuncDefs(node *parser.ASTNode) {
 	for _, child := range node.Children {
-		currentScope = auxStack.enter(int(child.ID))
 		visitNode(child)
-		currentScope = auxStack.exit()
 	}
 }
 
@@ -134,15 +132,21 @@ func handleMainProg(node *parser.ASTNode) {
 
 func handlePDef(node *parser.ASTNode) {
 	declareName(node.Children[0]) // name
-	visitNode(node.Children[1])   // param
-	visitNode(node.Children[2])   // body
+	currentScope = auxStack.enter(currentScope)
+	currentScope = int(node.ID)
+	visitNode(node.Children[1]) // param
+	visitNode(node.Children[2]) // body
+	currentScope = auxStack.exit()
 }
 
 func handleFDef(node *parser.ASTNode) {
 	declareName(node.Children[0]) // name
-	visitNode(node.Children[1])   // param
-	visitNode(node.Children[2])   // body
-	visitNode(node.Children[3])   // atom
+	currentScope = auxStack.enter(currentScope)
+	currentScope = int(node.ID)
+	visitNode(node.Children[1]) // param
+	visitNode(node.Children[2]) // body
+	visitNode(node.Children[3]) // atom
+	currentScope = auxStack.exit()
 }
 
 func handleParam(node *parser.ASTNode) {
@@ -242,7 +246,21 @@ func handleName(node *parser.ASTNode) {
 	name := node.Name
 	nodeID, ok := auxStack.lookup(name)
 	if !ok {
-		// Undeclared name error
+		for _, value := range symbolTable {
+			if value.symbolName == name {
+				if scopeLvl := value.scopeLevel; scopeLvl == PROCEDURE_SCOPE ||
+					scopeLvl == FUNCTION_SCOPE {
+					symbolTable[int(node.ID)] = SemanticInfo{
+						nodeID:          int(node.ID),
+						symbolName:      name,
+						uniqueID:        value.uniqueID,
+						scopeLevel:      scopeLvl,
+						declarationNode: value.declarationNode,
+					}
+					return
+				}
+			}
+		}
 		panic("undeclared-name: " + name)
 	}
 
@@ -316,11 +334,9 @@ func handleTerm(node *parser.ASTNode) {
 }
 
 func handleUnOp(node *parser.ASTNode) {
-	return
 }
 
 func handleBinOp(node *parser.ASTNode) {
-	return
 }
 
 func handleAtom(node *parser.ASTNode) {

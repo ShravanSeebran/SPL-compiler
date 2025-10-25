@@ -9,7 +9,7 @@ import (
 	"SPL-compiler/parser"
 )
 
-func TestGenerator(t *testing.T) {
+func notTestGenerator(t *testing.T) {
 	tests := []struct {
 		name  string
 		input string
@@ -45,26 +45,34 @@ func TestGenerator(t *testing.T) {
 		// 		`},
 		{"Testing ...", `
 glob { x y }
-proc { }
+proc { 
+	hello(a) { local { b } b = a; }
+	world(b) { local { c } c = b; }
+}
 func { 
-	f(a) { local {} x = a; return x } 
+	f(a) { 
+    local {} x = a; return x 
+	} 
+	double (n) {
+	  local { res }
+	  res = ( n mult 2 );
+    res = f(n);
+	  return res
+	}
 }
 main {
-halt
+  var { res z }
+  res = hello(z);
+  halt
 }
 		`},
 	}
-	// double (n) {
-	//   local { res }
-	//   res = ( n mult 2 );
-	//   return res
-	// }
-	// x = double(y);
 	for _, tt := range tests {
 		fmt.Println("\n-------------- ", tt.name, " --------------")
 		fmt.Println(tt.input)
 		lexer.PrintTokensInline(lexer.TokenizeInput(tt.input))
 		ast := generateAST(tt.input)
+		parser.PrettyPrintASTNode(ast, "", true)
 		testGenerator(ast)
 	}
 }

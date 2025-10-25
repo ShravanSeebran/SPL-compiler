@@ -31,7 +31,7 @@ func (s *AuxillaryStack) enter(scopeID int) int {
 	return scopeID
 }
 
-func (s *AuxillaryStack) exit() int { // NOTE: Can be improved
+func (s *AuxillaryStack) exit() int {
 	for len(*s) > 0 {
 		top := (*s)[len(*s)-1]
 		*s = (*s)[:len(*s)-1]

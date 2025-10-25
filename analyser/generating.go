@@ -78,15 +78,25 @@ func generateAlgo(node *parser.ASTNode) []string {
 }
 
 func generateInstr(node *parser.ASTNode) []string {
-	if node.Name == "halt" {
+	switch node.Name {
+	case "halt":
 		return []string{"STOP"}
-	} else if node.Name == "print" {
+	case "print":
 		return []string{fmt.Sprintf("PRINT %s", getOutput(node.Children[0]))}
-	} else if node.Name == "call" {
+	case "call":
 		fname := symbolTable[int(node.Children[0].ID)].uniqueID
 		code, places := generateInput(node.Children[1])
 		return append(code, fmt.Sprintf("CALL %s(%s)", fname, strings.Join(places, " ")))
-	} else {
+		// procNodeID := symbolTable[int(node.Children[0].ID)].declarationNode
+		// procNode := parser.GetNodeByID(procNodeID)
+		// inlineCode, places, := inlineProc(procNode)
+		// outptut := make([]string, 0)
+		// for i, param := range node.Children[1].Children {
+		// 	outptut = append(outptut, fmt.Sprintf("%s = %s", places[i], getAtom(param)))
+		// }
+		// outptut = append(outptut, inlineCode...)
+		// return output
+	default:
 		return generateCode(node.Children[0])
 	}
 }
