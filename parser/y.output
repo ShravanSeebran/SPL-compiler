@@ -268,7 +268,7 @@ state 33
 
 
 state 34
-	body:  LOCAL.LBRACE maxthree RBRACE algo 
+	body:  LOCAL.LBRACE maxthree RBRACE bodyalgo 
 
 	LBRACE  shift 38
 	.  error
@@ -295,7 +295,7 @@ state 37
 
 
 state 38
-	body:  LOCAL LBRACE.maxthree RBRACE algo 
+	body:  LOCAL LBRACE.maxthree RBRACE bodyalgo 
 	maxthree: .    (14)
 
 	IDENT  shift 6
@@ -320,7 +320,7 @@ state 40
 
 
 state 41
-	body:  LOCAL LBRACE maxthree.RBRACE algo 
+	body:  LOCAL LBRACE maxthree.RBRACE bodyalgo 
 
 	RBRACE  shift 45
 	.  error
@@ -349,7 +349,7 @@ state 44
 	body  goto 48
 
 state 45
-	body:  LOCAL LBRACE maxthree RBRACE.algo 
+	body:  LOCAL LBRACE maxthree RBRACE.bodyalgo 
 
 	HALT  shift 51
 	PRINT  shift 52
@@ -361,7 +361,7 @@ state 45
 
 	var  goto 58
 	name  goto 53
-	algo  goto 49
+	bodyalgo  goto 49
 	instr  goto 50
 	assign  goto 54
 	loop  goto 55
@@ -391,23 +391,23 @@ state 48
 
 
 state 49
-	body:  LOCAL LBRACE maxthree RBRACE algo.    (12)
+	body:  LOCAL LBRACE maxthree RBRACE bodyalgo.    (12)
 
 	.  reduce 12 (src line 115)
 
 
 state 50
-	algo:  instr.SEMICOLON 
-	algo:  instr.SEMICOLON algo 
+	bodyalgo:  instr.SEMICOLON 
+	bodyalgo:  instr.SEMICOLON bodyalgo 
 
 	SEMICOLON  shift 64
 	.  error
 
 
 state 51
-	instr:  HALT.    (23)
+	instr:  HALT.    (25)
 
-	.  reduce 23 (src line 144)
+	.  reduce 25 (src line 149)
 
 
 state 52
@@ -430,21 +430,21 @@ state 53
 
 
 state 54
-	instr:  assign.    (26)
+	instr:  assign.    (28)
 
-	.  reduce 26 (src line 148)
+	.  reduce 28 (src line 153)
 
 
 state 55
-	instr:  loop.    (27)
+	instr:  loop.    (29)
 
-	.  reduce 27 (src line 149)
+	.  reduce 29 (src line 154)
 
 
 state 56
-	instr:  branch.    (28)
+	instr:  branch.    (30)
 
-	.  reduce 28 (src line 150)
+	.  reduce 30 (src line 155)
 
 
 state 57
@@ -513,8 +513,8 @@ state 63
 	atom  goto 78
 
 state 64
-	algo:  instr SEMICOLON.    (21)
-	algo:  instr SEMICOLON.algo 
+	bodyalgo:  instr SEMICOLON.    (23)
+	bodyalgo:  instr SEMICOLON.bodyalgo 
 
 	HALT  shift 51
 	PRINT  shift 52
@@ -522,32 +522,32 @@ state 64
 	DO  shift 60
 	IF  shift 61
 	IDENT  shift 57
-	.  reduce 21 (src line 139)
+	.  reduce 23 (src line 144)
 
 	var  goto 58
 	name  goto 53
-	algo  goto 79
+	bodyalgo  goto 79
 	instr  goto 50
 	assign  goto 54
 	loop  goto 55
 	branch  goto 56
 
 state 65
-	instr:  PRINT output.    (24)
+	instr:  PRINT output.    (26)
 
-	.  reduce 24 (src line 146)
+	.  reduce 26 (src line 151)
 
 
 state 66
-	output:  atom.    (35)
+	output:  atom.    (37)
 
-	.  reduce 35 (src line 168)
+	.  reduce 37 (src line 173)
 
 
 state 67
-	output:  STRING.    (36)
+	output:  STRING.    (38)
 
-	.  reduce 36 (src line 170)
+	.  reduce 38 (src line 175)
 
 
 state 68
@@ -564,11 +564,11 @@ state 69
 
 state 70
 	instr:  name LPAREN.input RPAREN 
-	input: .    (37)
+	input: .    (39)
 
 	IDENT  shift 6
 	NUMBER  shift 69
-	.  reduce 37 (src line 173)
+	.  reduce 39 (src line 178)
 
 	var  goto 68
 	atom  goto 81
@@ -596,9 +596,9 @@ state 72
 
 
 state 73
-	term:  atom.    (41)
+	term:  atom.    (43)
 
-	.  reduce 41 (src line 180)
+	.  reduce 43 (src line 185)
 
 
 state 74
@@ -631,7 +631,7 @@ state 75
 	var  goto 58
 	name  goto 53
 	algo  goto 89
-	instr  goto 50
+	instr  goto 90
 	assign  goto 54
 	loop  goto 55
 	branch  goto 56
@@ -640,7 +640,7 @@ state 76
 	branch:  IF term.LBRACE algo RBRACE 
 	branch:  IF term.LBRACE algo RBRACE ELSE LBRACE algo RBRACE 
 
-	LBRACE  shift 90
+	LBRACE  shift 91
 	.  error
 
 
@@ -657,8 +657,8 @@ state 77
 
 	var  goto 58
 	name  goto 53
-	algo  goto 91
-	instr  goto 50
+	algo  goto 92
+	instr  goto 90
 	assign  goto 54
 	loop  goto 55
 	branch  goto 56
@@ -666,46 +666,46 @@ state 77
 state 78
 	fdef:  name LPAREN param RPAREN LBRACE body RETURN atom.RBRACE 
 
-	RBRACE  shift 92
+	RBRACE  shift 93
 	.  error
 
 
 state 79
-	algo:  instr SEMICOLON algo.    (22)
+	bodyalgo:  instr SEMICOLON bodyalgo.    (24)
 
-	.  reduce 22 (src line 141)
+	.  reduce 24 (src line 146)
 
 
 state 80
 	instr:  name LPAREN input.RPAREN 
 
-	RPAREN  shift 93
+	RPAREN  shift 94
 	.  error
 
 
 state 81
-	input:  atom.    (38)
+	input:  atom.    (40)
 	input:  atom.atom 
 	input:  atom.atom atom 
 
 	IDENT  shift 6
 	NUMBER  shift 69
-	.  reduce 38 (src line 175)
+	.  reduce 40 (src line 180)
 
 	var  goto 68
-	atom  goto 94
+	atom  goto 95
 
 state 82
 	assign:  var ASSIGN name.LPAREN input RPAREN 
 
-	LPAREN  shift 95
+	LPAREN  shift 96
 	.  error
 
 
 state 83
-	assign:  var ASSIGN term.    (30)
+	assign:  var ASSIGN term.    (32)
 
-	.  reduce 30 (src line 155)
+	.  reduce 32 (src line 160)
 
 
 state 84
@@ -721,8 +721,8 @@ state 84
 
 	var  goto 58
 	name  goto 53
-	algo  goto 96
-	instr  goto 50
+	algo  goto 97
+	instr  goto 90
 	assign  goto 54
 	loop  goto 55
 	branch  goto 56
@@ -737,43 +737,51 @@ state 85
 
 	var  goto 68
 	atom  goto 73
-	term  goto 97
+	term  goto 98
 
 state 86
 	term:  LPAREN term.binop term RPAREN 
 
-	EQ  shift 99
-	GT  shift 100
-	OR  shift 101
-	AND  shift 102
-	PLUS  shift 103
-	MINUS  shift 104
-	MULT  shift 105
-	DIV  shift 106
+	EQ  shift 100
+	GT  shift 101
+	OR  shift 102
+	AND  shift 103
+	PLUS  shift 104
+	MINUS  shift 105
+	MULT  shift 106
+	DIV  shift 107
 	.  error
 
-	binop  goto 98
+	binop  goto 99
 
 state 87
-	unop:  NEG.    (44)
+	unop:  NEG.    (46)
 
-	.  reduce 44 (src line 186)
+	.  reduce 46 (src line 191)
 
 
 state 88
-	unop:  NOT.    (45)
+	unop:  NOT.    (47)
 
-	.  reduce 45 (src line 188)
+	.  reduce 47 (src line 193)
 
 
 state 89
 	loop:  DO LBRACE algo.RBRACE UNTIL term 
 
-	RBRACE  shift 107
+	RBRACE  shift 108
 	.  error
 
 
 state 90
+	algo:  instr.    (21)
+	algo:  instr.SEMICOLON algo 
+
+	SEMICOLON  shift 109
+	.  reduce 21 (src line 139)
+
+
+state 91
 	branch:  IF term LBRACE.algo RBRACE 
 	branch:  IF term LBRACE.algo RBRACE ELSE LBRACE algo RBRACE 
 
@@ -787,68 +795,68 @@ state 90
 
 	var  goto 58
 	name  goto 53
-	algo  goto 108
-	instr  goto 50
+	algo  goto 110
+	instr  goto 90
 	assign  goto 54
 	loop  goto 55
 	branch  goto 56
 
-state 91
+state 92
 	mainprog:  VAR LBRACE variables RBRACE algo.    (18)
 
 	.  reduce 18 (src line 129)
 
 
-state 92
+state 93
 	fdef:  name LPAREN param RPAREN LBRACE body RETURN atom RBRACE.    (11)
 
 	.  reduce 11 (src line 110)
 
 
-state 93
-	instr:  name LPAREN input RPAREN.    (25)
-
-	.  reduce 25 (src line 147)
-
-
 state 94
-	input:  atom atom.    (39)
+	instr:  name LPAREN input RPAREN.    (27)
+
+	.  reduce 27 (src line 152)
+
+
+state 95
+	input:  atom atom.    (41)
 	input:  atom atom.atom 
 
 	IDENT  shift 6
 	NUMBER  shift 69
-	.  reduce 39 (src line 176)
+	.  reduce 41 (src line 181)
 
 	var  goto 68
-	atom  goto 109
+	atom  goto 111
 
-state 95
+state 96
 	assign:  var ASSIGN name LPAREN.input RPAREN 
-	input: .    (37)
+	input: .    (39)
 
 	IDENT  shift 6
 	NUMBER  shift 69
-	.  reduce 37 (src line 173)
+	.  reduce 39 (src line 178)
 
 	var  goto 68
 	atom  goto 81
-	input  goto 110
-
-state 96
-	loop:  WHILE term LBRACE algo.RBRACE 
-
-	RBRACE  shift 111
-	.  error
-
+	input  goto 112
 
 state 97
-	term:  LPAREN unop term.RPAREN 
+	loop:  WHILE term LBRACE algo.RBRACE 
 
-	RPAREN  shift 112
+	RBRACE  shift 113
 	.  error
 
 
 state 98
+	term:  LPAREN unop term.RPAREN 
+
+	RPAREN  shift 114
+	.  error
+
+
+state 99
 	term:  LPAREN term binop.term RPAREN 
 
 	LPAREN  shift 74
@@ -858,104 +866,123 @@ state 98
 
 	var  goto 68
 	atom  goto 73
-	term  goto 113
-
-state 99
-	binop:  EQ.    (46)
-
-	.  reduce 46 (src line 191)
-
+	term  goto 115
 
 state 100
-	binop:  GT.    (47)
+	binop:  EQ.    (48)
 
-	.  reduce 47 (src line 193)
+	.  reduce 48 (src line 196)
 
 
 state 101
-	binop:  OR.    (48)
+	binop:  GT.    (49)
 
-	.  reduce 48 (src line 194)
+	.  reduce 49 (src line 198)
 
 
 state 102
-	binop:  AND.    (49)
+	binop:  OR.    (50)
 
-	.  reduce 49 (src line 195)
+	.  reduce 50 (src line 199)
 
 
 state 103
-	binop:  PLUS.    (50)
+	binop:  AND.    (51)
 
-	.  reduce 50 (src line 196)
+	.  reduce 51 (src line 200)
 
 
 state 104
-	binop:  MINUS.    (51)
+	binop:  PLUS.    (52)
 
-	.  reduce 51 (src line 197)
+	.  reduce 52 (src line 201)
 
 
 state 105
-	binop:  MULT.    (52)
+	binop:  MINUS.    (53)
 
-	.  reduce 52 (src line 198)
+	.  reduce 53 (src line 202)
 
 
 state 106
-	binop:  DIV.    (53)
+	binop:  MULT.    (54)
 
-	.  reduce 53 (src line 199)
+	.  reduce 54 (src line 203)
 
 
 state 107
-	loop:  DO LBRACE algo RBRACE.UNTIL term 
+	binop:  DIV.    (55)
 
-	UNTIL  shift 114
-	.  error
+	.  reduce 55 (src line 204)
 
 
 state 108
-	branch:  IF term LBRACE algo.RBRACE 
-	branch:  IF term LBRACE algo.RBRACE ELSE LBRACE algo RBRACE 
+	loop:  DO LBRACE algo RBRACE.UNTIL term 
 
-	RBRACE  shift 115
+	UNTIL  shift 116
 	.  error
 
 
 state 109
-	input:  atom atom atom.    (40)
+	algo:  instr SEMICOLON.algo 
 
-	.  reduce 40 (src line 177)
+	HALT  shift 51
+	PRINT  shift 52
+	WHILE  shift 59
+	DO  shift 60
+	IF  shift 61
+	IDENT  shift 57
+	.  error
 
+	var  goto 58
+	name  goto 53
+	algo  goto 117
+	instr  goto 90
+	assign  goto 54
+	loop  goto 55
+	branch  goto 56
 
 state 110
-	assign:  var ASSIGN name LPAREN input.RPAREN 
+	branch:  IF term LBRACE algo.RBRACE 
+	branch:  IF term LBRACE algo.RBRACE ELSE LBRACE algo RBRACE 
 
-	RPAREN  shift 116
+	RBRACE  shift 118
 	.  error
 
 
 state 111
-	loop:  WHILE term LBRACE algo RBRACE.    (31)
-
-	.  reduce 31 (src line 158)
-
-
-state 112
-	term:  LPAREN unop term RPAREN.    (42)
+	input:  atom atom atom.    (42)
 
 	.  reduce 42 (src line 182)
 
 
-state 113
-	term:  LPAREN term binop term.RPAREN 
+state 112
+	assign:  var ASSIGN name LPAREN input.RPAREN 
 
-	RPAREN  shift 117
+	RPAREN  shift 119
 	.  error
 
 
+state 113
+	loop:  WHILE term LBRACE algo RBRACE.    (33)
+
+	.  reduce 33 (src line 163)
+
+
 state 114
+	term:  LPAREN unop term RPAREN.    (44)
+
+	.  reduce 44 (src line 187)
+
+
+state 115
+	term:  LPAREN term binop term.RPAREN 
+
+	RPAREN  shift 120
+	.  error
+
+
+state 116
 	loop:  DO LBRACE algo RBRACE UNTIL.term 
 
 	LPAREN  shift 74
@@ -965,42 +992,48 @@ state 114
 
 	var  goto 68
 	atom  goto 73
-	term  goto 118
-
-state 115
-	branch:  IF term LBRACE algo RBRACE.    (33)
-	branch:  IF term LBRACE algo RBRACE.ELSE LBRACE algo RBRACE 
-
-	ELSE  shift 119
-	.  reduce 33 (src line 163)
-
-
-state 116
-	assign:  var ASSIGN name LPAREN input RPAREN.    (29)
-
-	.  reduce 29 (src line 153)
-
+	term  goto 121
 
 state 117
-	term:  LPAREN term binop term RPAREN.    (43)
+	algo:  instr SEMICOLON algo.    (22)
 
-	.  reduce 43 (src line 183)
+	.  reduce 22 (src line 141)
 
 
 state 118
-	loop:  DO LBRACE algo RBRACE UNTIL term.    (32)
+	branch:  IF term LBRACE algo RBRACE.    (35)
+	branch:  IF term LBRACE algo RBRACE.ELSE LBRACE algo RBRACE 
 
-	.  reduce 32 (src line 160)
+	ELSE  shift 122
+	.  reduce 35 (src line 168)
 
 
 state 119
-	branch:  IF term LBRACE algo RBRACE ELSE.LBRACE algo RBRACE 
+	assign:  var ASSIGN name LPAREN input RPAREN.    (31)
 
-	LBRACE  shift 120
-	.  error
+	.  reduce 31 (src line 158)
 
 
 state 120
+	term:  LPAREN term binop term RPAREN.    (45)
+
+	.  reduce 45 (src line 188)
+
+
+state 121
+	loop:  DO LBRACE algo RBRACE UNTIL term.    (34)
+
+	.  reduce 34 (src line 165)
+
+
+state 122
+	branch:  IF term LBRACE algo RBRACE ELSE.LBRACE algo RBRACE 
+
+	LBRACE  shift 123
+	.  error
+
+
+state 123
 	branch:  IF term LBRACE algo RBRACE ELSE LBRACE.algo RBRACE 
 
 	HALT  shift 51
@@ -1013,34 +1046,34 @@ state 120
 
 	var  goto 58
 	name  goto 53
-	algo  goto 121
-	instr  goto 50
+	algo  goto 124
+	instr  goto 90
 	assign  goto 54
 	loop  goto 55
 	branch  goto 56
 
-state 121
+state 124
 	branch:  IF term LBRACE algo RBRACE ELSE LBRACE algo.RBRACE 
 
-	RBRACE  shift 122
+	RBRACE  shift 125
 	.  error
 
 
-state 122
-	branch:  IF term LBRACE algo RBRACE ELSE LBRACE algo RBRACE.    (34)
+state 125
+	branch:  IF term LBRACE algo RBRACE ELSE LBRACE algo RBRACE.    (36)
 
-	.  reduce 34 (src line 165)
+	.  reduce 36 (src line 170)
 
 
-36 terminals, 24 nonterminals
-54 grammar rules, 123/16000 states
+36 terminals, 25 nonterminals
+56 grammar rules, 126/16000 states
 0 shift/reduce, 0 reduce/reduce conflicts reported
-73 working sets used
+74 working sets used
 memory: parser 143/240000
-24 extra closures
-144 shift entries, 2 exceptions
-69 goto entries
-51 entries saved by goto default
-Optimizer space used: output 146/240000
-146 table entries, 0 zero
-maximum spread: 36, maximum offset: 120
+64 extra closures
+151 shift entries, 2 exceptions
+73 goto entries
+54 entries saved by goto default
+Optimizer space used: output 151/240000
+151 table entries, 0 zero
+maximum spread: 36, maximum offset: 123
