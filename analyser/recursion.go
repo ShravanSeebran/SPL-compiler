@@ -1,6 +1,8 @@
 package analyser
 
 import (
+	"errors"
+	"fmt"
 	"slices"
 
 	"SPL-compiler/parser"
@@ -11,7 +13,14 @@ var rootNode *parser.ASTNode
 func ValidateNoRecursion(root *parser.ASTNode) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = r.(error)
+			switch v := r.(type) {
+			case string:
+				err = errors.New(v)
+			case error:
+				err = r.(error)
+			default:
+				err = fmt.Errorf("unknown panic: %v", v)
+			}
 		}
 	}()
 
@@ -27,7 +36,7 @@ func CheckRecursion(root *parser.ASTNode) {
 	for len(procdefs.Children) > 0 {
 		if checkDefForRecursion(
 			procdefs.Children[0],
-			[]string{symbolTable[int(procdefs.Children[0].Children[0].ID)].uniqueID},
+			[]string{symbolTable[int(procdefs.Children[0].Children[0].ID)].symbolName},
 		) {
 			panic("Recursion detected in procedure definitions")
 		}
@@ -37,7 +46,7 @@ func CheckRecursion(root *parser.ASTNode) {
 	for len(funcdefs.Children) > 0 {
 		if checkDefForRecursion(
 			funcdefs.Children[0],
-			[]string{symbolTable[int(funcdefs.Children[0].Children[0].ID)].uniqueID},
+			[]string{symbolTable[int(funcdefs.Children[0].Children[0].ID)].symbolName},
 		) {
 			panic("Recursion detected in function definitions")
 		}

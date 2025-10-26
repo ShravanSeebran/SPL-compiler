@@ -3,44 +3,46 @@ package analyser
 import (
 	"fmt"
 	"os"
+	"testing"
 
 	"SPL-compiler/lexer"
 	"SPL-compiler/parser"
 )
 
-// func TestSymbolTable(t *testing.T) {
-// 	tests := []struct {
-// 		name  string
-// 		input string
-// 	}{
-// 		{"Testing redeclaration of global variables in main scope", `
-// 		  glob { x y }
-// 		  proc {}
-// 		  func {}
-// 		  main {
-// 			var { x z }
-// 			halt
-// 		  }
-// 		`},
-// 		{"Testing using global variable in local function scope", `
-// 		  glob { x y }
-// 		  proc { f(a b) { local { c } x = a } g(a b) { local { c } x = a } }
-// 		  func {}
-// 		  main {
-// 			var { x z }
-// 			x = ( x plus z );
-// 			halt
-// 		  }
-// 		`},
-// 	}
-// 	for _, tt := range tests {
-// 		fmt.Println("\n-------------- ", tt.name, " --------------")
-// 		fmt.Println(tt.input)
-// 		ast := testParse(tt.input)
-// 		testProgram(ast)
-//
-// 	}
-// }
+func TestSymbolTable(t *testing.T) {
+	tests := []struct {
+		name  string
+		input string
+	}{
+		{"Testing redeclaration of global variables in main scope", `
+		  glob { x y }
+		  proc {}
+		  func {}
+		  main {
+			var { x z }
+			halt
+		  }
+		`},
+		{"Testing using global variable in local function scope", `
+		  glob { x y }
+		  proc { f(a b) { local { c } x = a } g(a b) { local { c } x = a } }
+		  func {}
+		  main {
+			var { x z }
+			x = ( x plus z );
+			z = f(x z);
+			halt
+		  }
+		`},
+	}
+	for _, tt := range tests {
+		fmt.Println("\n-------------- ", tt.name, " --------------")
+		fmt.Println(tt.input)
+		ast := testParse(tt.input)
+		testProgram(ast)
+
+	}
+}
 
 func testParse(input string) *parser.ASTNode {
 	l := lexer.New(input)
