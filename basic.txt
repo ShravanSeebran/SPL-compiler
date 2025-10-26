@@ -1,0 +1,69 @@
+glob { a b c d e f}
+proc { 
+    printadd(x y z) { local {} print "The value of"; print x;
+    print "plus"; print y; print "is"; print z }
+    printsub(x y z) { local {} print "The value of"; print x;
+    print "minus"; print y; print "is"; print z }
+    printmul(x y z) { local {} print "The value of"; print x;
+    print "multiplied by"; print y; print "is"; print z }
+    printdiv(x y z) { local {} print "The value of"; print x;
+    print "divided by"; print y; print "is"; print z }
+}
+func { 
+    add(x y) { local {z} z = add(x y); return z} 
+    subtract(x y) { local {z} z = ( x minus y ); return z}
+    multiply(x y) { local {z} z = ( x mult y ); return z}
+    divide(x y) { local {z} z = ( x div y ); return z}
+    }
+main {
+var {a b c}
+    a = 5;
+    b = 3;
+    c = 4;
+    d = 20;
+    e = 6;
+    f = 10;
+
+    do {
+    if ((a > b) and (not (c eq d))) {
+        print "a gr b";
+        print "and";
+        print "c neq d";
+        c = add(a b);
+        printadd(a b c);
+        b = (a plus b)
+    } else {
+        print "a le b";
+        print "and";
+        print "c eq d";
+        c = add(a b);
+        printadd(a b c);
+        d = f
+    };
+
+    if ((( neg d ) > e) or (c eq d)) {
+        print "-d gr e";
+        print "or";
+        print "c eq d";
+        d = subtract(a b);
+        printsub(a b d)
+    }
+    } until (d eq f);
+
+    if ((not(d eq f)) or (c eq d)) {
+        print "d eq f";
+        print "or";
+        print "c eq d";
+        d = multiply(a b);
+        printmul(a b d)
+    } else {
+        print "d neq f";
+        print "or";
+        print "c eq d";
+        d = divide(a b);
+        printdiv(a b d)
+    };
+    d = divide(a b);
+    printdiv(a b d)
+}
+

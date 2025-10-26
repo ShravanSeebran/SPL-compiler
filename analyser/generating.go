@@ -1,19 +1,46 @@
 package analyser
 
 import (
-	"fmt"
-
 	"SPL-compiler/parser"
+	"fmt"
+	"slices"
 )
 
 var (
-	placeIndex int
-	labelIndex int
+	placeIndex  int
+	labelIndex  int
+	letterIndex int
 )
 
 func initialiseGenerator() {
 	placeIndex = 0
 	labelIndex = 0
+	letterIndex = 0
+}
+
+func getUniquePlace() string {
+	if placeIndex == 25 {
+		placeIndex = 0
+		letterIndex++
+	}
+	if letterIndex == 25 {
+		panic("Run out of unique place names")
+	}
+	currentChar := charSet[letterIndex]
+	recentChar := charSet[placeIndex]
+	candidate := fmt.Sprintf("%c%c", currentChar, recentChar)
+	if keywordSet(candidate) {
+		placeIndex++
+		return getUniquePlace()
+	}
+	placeIndex++
+	return candidate
+}
+
+func keywordSet(candidate string) bool {
+	// TODO: Add more keywords
+	keywords := []string{"at", "or", "if", "to", "on", "go", "as", "is", "do", "in"}
+	return slices.Contains(keywords, candidate)
 }
 
 func ValidateCodeGeneration(root *parser.ASTNode) (intrs []string, err error) {
@@ -30,12 +57,6 @@ func ValidateCodeGeneration(root *parser.ASTNode) (intrs []string, err error) {
 func GenerateProgram(root *parser.ASTNode) []string {
 	initialiseGenerator()
 	return generateCode(root)
-}
-
-func newPlace() string {
-	newIndex := fmt.Sprintf("t%d", placeIndex)
-	placeIndex++
-	return newIndex
 }
 
 func newLabel() string {
@@ -64,8 +85,6 @@ func generateCode(node *parser.ASTNode) []string {
 		return generateLoop(node)
 	case BRANCH:
 		return generateBranch(node)
-	// case TERM:
-	// 	return generateTerm(node)
 	default:
 		panic("ungenerateed-node-type: " + node.Type)
 	}
@@ -122,7 +141,7 @@ func generateInput(node *parser.ASTNode) ([]string, []string) {
 	assignments := make([]string, 0)
 	places := make([]string, 0)
 	for _, child := range node.Children {
-		place := newPlace()
+		place := getUniquePlace()
 		value := getAtom(child)
 		assignments = append(assignments, fmt.Sprintf("%s = %s", place, value))
 		places = append(places, place)
@@ -159,9 +178,8 @@ func getVar(node *parser.ASTNode) string {
 
 func generateAssign(node *parser.ASTNode) []string {
 	if node.Name == "call" {
-		place := newPlace()
+		place := getUniquePlace()
 		vname := symbolTable[int(node.Children[0].ID)].uniqueID
-		// fname := symbolTable[int(node.Children[1].ID)].uniqueID
 		code, argPlaces := generateInput(node.Children[2])
 		funcNodeID := symbolTable[int(node.Children[1].ID)].declarationNode
 		funcNode := parser.GetDefNodeByNameID(rootNode, funcNodeID)
@@ -175,12 +193,11 @@ func generateAssign(node *parser.ASTNode) []string {
 
 		return append(
 			output,
-			// fmt.Sprintf("%s = CALL %s(%s)", place, fname, strings.Join(places, " ")),
 			fmt.Sprintf("%s = %s", vname, place),
 		)
 
 	} else {
-		place := newPlace()
+		place := getUniquePlace()
 		vname := symbolTable[int(node.Children[0].ID)].uniqueID
 		code := generateTerm(node.Children[1], place)
 		return append(code, fmt.Sprintf("%s = %s", vname, place))
@@ -188,7 +205,6 @@ func generateAssign(node *parser.ASTNode) []string {
 }
 
 func generateLoop(node *parser.ASTNode) []string {
-	// NOTE: Check for implicit GOTOS
 	switch node.Name {
 	case "while":
 		labelCond := newLabel()
@@ -212,7 +228,6 @@ func generateLoop(node *parser.ASTNode) []string {
 			fmt.Sprintf("GOTO %s", labelCond),
 			fmt.Sprintf("REM %s", labelExit))
 
-	// NOTE: Stopped here
 	case "do":
 		labelStart := newLabel()
 		labelExit := newLabel()
@@ -300,8 +315,8 @@ func generateCond(node *parser.ASTNode, labelT, labelF string) []string {
 			part0 := append(codeL, fmt.Sprintf("REM %s", arg2))
 			return append(part0, codeR...)
 		}
-		t1 := newPlace()
-		t2 := newPlace()
+		t1 := getUniquePlace()
+		t2 := getUniquePlace()
 		codeL := generateTerm(node.Children[0], t1)
 		binop := getBinOp(node.Children[1])
 		codeR := generateTerm(node.Children[2], t2)
@@ -328,27 +343,20 @@ func generateCondElse(node *parser.ASTNode, labelT, labelF string, elseInstrs []
 		op := node.Children[1].Name
 		switch op {
 		case "and":
-			fmt.Println(
-				"Generating 'and' condition with else: labelT =",
-				labelT,
-				"labelF =",
-				labelF,
-			)
 			arg2 := newLabel()
 			codeL := generateCondElse(node.Children[0], arg2, labelF, elseInstrs)
 			codeR := generateCond(node.Children[2], labelT, labelF)
 			part0 := append(codeL, fmt.Sprintf("REM %s", arg2))
 			return append(part0, codeR...)
 		case "or":
-			fmt.Println("Generating 'or' condition with else: labelT =", labelT, "labelF =", labelF)
 			arg2 := newLabel()
 			codeL := generateCond(node.Children[0], labelT, arg2)
 			codeR := generateCondElse(node.Children[2], labelT, labelF, elseInstrs)
 			part0 := append(codeL, fmt.Sprintf("REM %s", arg2))
 			return append(part0, codeR...)
 		}
-		t1 := newPlace()
-		t2 := newPlace()
+		t1 := getUniquePlace()
+		t2 := getUniquePlace()
 		codeL := generateTerm(node.Children[0], t1)
 		binop := getBinOp(node.Children[1])
 		codeR := generateTerm(node.Children[2], t2)
@@ -380,7 +388,7 @@ func generateTerm(node *parser.ASTNode, place string) []string {
 		if node.Children[0].Name != "neg" {
 			panic("expected 'neg' UnOp in Term node")
 		}
-		t0 := newPlace()
+		t0 := getUniquePlace()
 		unop := getUnOp(node.Children[0])
 		code := generateTerm(node.Children[1], t0)
 		return append(code, fmt.Sprintf("%s = %s%s", place, unop, t0))
@@ -388,8 +396,8 @@ func generateTerm(node *parser.ASTNode, place string) []string {
 		if node.Children[1].Name == "and" || node.Children[1].Name == "or" {
 			panic("expected non-boolean BinOp in Term node")
 		}
-		t0 := newPlace()
-		t1 := newPlace()
+		t0 := getUniquePlace()
+		t1 := getUniquePlace()
 		codeL := generateTerm(node.Children[0], t0)
 		binop := getBinOp(node.Children[1])
 		codeR := generateTerm(node.Children[2], t1)

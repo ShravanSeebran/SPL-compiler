@@ -1,9 +1,8 @@
 package analyser
 
 import (
-	"fmt"
-
 	"SPL-compiler/parser"
+	"fmt"
 )
 
 var (
@@ -11,9 +10,12 @@ var (
 	auxStack        *AuxillaryStack
 	currentScope    int
 	varIndex        int
+	curIndex        int
 	GLOBAL_SCOPE    int
 	PROCEDURE_SCOPE int
 	FUNCTION_SCOPE  int
+	charSet         string
+	single          bool
 )
 
 func initialiseAnalyser() {
@@ -21,6 +23,37 @@ func initialiseAnalyser() {
 	auxStack = Empty()
 	currentScope = 0
 	varIndex = 0
+	curIndex = 0
+	charSet = "abcdefghijklmnopqrstuvwxyz"
+	single = true
+}
+
+func getUniqueVar() string {
+	if single {
+		if varIndex == 25 {
+			single = false
+			varIndex = 0
+			return getUniqueVar()
+		}
+		currentChar := charSet[varIndex]
+		varIndex++
+		return fmt.Sprintf("%c", currentChar)
+	}
+	if curIndex == 9 {
+		curIndex = 0
+		varIndex++
+	}
+	if varIndex == 25 {
+		panic("Run out of unique variable names")
+	}
+	currentChar := charSet[varIndex]
+	// NOTE: Avoid clashes with label names
+	if currentChar == 'l' {
+		varIndex++
+		return getUniqueVar()
+	}
+	curIndex++
+	return fmt.Sprintf("%c%d", currentChar, curIndex)
 }
 
 func ValidateScoping(root *parser.ASTNode) (err error) {
@@ -186,11 +219,10 @@ func declareVar(node *parser.ASTNode) {
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      varname,
-		uniqueID:        fmt.Sprintf("v%d", varIndex),
+		uniqueID:        getUniqueVar(),
 		scopeLevel:      currentScope,
 		declarationNode: int(node.ID),
 	}
-	varIndex++
 }
 
 func declareName(node *parser.ASTNode) {
@@ -209,7 +241,7 @@ func declareName(node *parser.ASTNode) {
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      name,
-		uniqueID:        name,
+		uniqueID:        getUniqueVar(),
 		scopeLevel:      currentScope,
 		declarationNode: int(node.ID),
 	}
@@ -284,7 +316,7 @@ func handleName(node *parser.ASTNode) {
 	symbolTable[int(node.ID)] = SemanticInfo{
 		nodeID:          int(node.ID),
 		symbolName:      name,
-		uniqueID:        name,
+		uniqueID:        getUniqueVar(),
 		scopeLevel:      symbolTable[nodeID].scopeLevel,
 		declarationNode: symbolTable[nodeID].declarationNode,
 	}
